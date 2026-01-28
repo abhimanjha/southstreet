@@ -34,20 +34,30 @@ export default function Hero() {
 
   return (
     <div className="hero-section" ref={heroRef}>
-      {/* 3D Spline Scene with Parallax */}
+      {/* Custom 3D Street Wear Scene with Parallax */}
       <div
-        className="spline-wrapper"
+        className="hero-3d-scene"
         style={{
           transform: `translate(${mousePosition.x}px, ${mousePosition.y}px) translateY(${scrollY * 0.5}px)`,
         }}
       >
-        <iframe
-          src="https://my.spline.design/zerogravityphysicslandingpage-0a9EMuJ6kAZQaj1SXV7WLa4H/"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-          title="Spline Scene"
-        />
+        {/* Floating Fashion Elements */}
+        <div className="fashion-element jacket" style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px) rotateX(${scrollY * 0.1}deg)` }}>
+          <div className="jacket-shape"></div>
+        </div>
+        <div className="fashion-element shoes" style={{ transform: `translate(${mousePosition.x * -0.3}px, ${mousePosition.y * -0.3}px) rotateY(${scrollY * 0.05}deg)` }}>
+          <div className="shoe-left"></div>
+          <div className="shoe-right"></div>
+        </div>
+        <div className="fashion-element hat" style={{ transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px) rotateZ(${scrollY * 0.08}deg)` }}>
+          <div className="hat-shape"></div>
+        </div>
+        <div className="fashion-element pants" style={{ transform: `translate(${mousePosition.x * -0.4}px, ${mousePosition.y * 0.4}px) rotateX(${scrollY * -0.06}deg)` }}>
+          <div className="pants-shape"></div>
+        </div>
+        <div className="fashion-element bag" style={{ transform: `translate(${mousePosition.x * 0.6}px, ${mousePosition.y * -0.6}px) rotateY(${scrollY * 0.03}deg)` }}>
+          <div className="bag-shape"></div>
+        </div>
       </div>
 
       {/* Overlay Gradient for Text Readability */}

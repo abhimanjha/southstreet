@@ -1,15 +1,18 @@
+import { useContext } from 'react';
+import { ShopContext } from '../context/ShopContext';
 import { useEffect, useRef } from 'react';
 import Hero from "../components/Hero";
-import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 import CategoryCard from "../components/CategoryCard";
-import Footer from "../components/Footer";
+
 
 function Home() {
+  const { products } = useContext(ShopContext);
   const parallaxRef = useRef(null);
 
   // Scroll animation observer
   useEffect(() => {
+
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -100px 0px'
@@ -45,16 +48,6 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Product data
-  const products = [
-    { id: 1, name: 'Leather Jacket', price: 899, image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_jacket_1_1769601137269.png' },
-    { id: 2, name: 'Silk Midi Dress', price: 649, image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_dress_beige_1769601164537.png' },
-    { id: 3, name: 'Wool Overcoat', price: 1299, image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_coat_grey_1769601192016.png' },
-    { id: 4, name: 'Premium Sneakers', price: 399, image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_sneakers_white_1769601222724.png' },
-    { id: 5, name: 'Leather Handbag', price: 799, image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_bag_taupe_1769601252148.png' },
-    { id: 6, name: 'Cashmere Sweater', price: 549, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600' },
-  ];
-
   // Category data
   const categories = [
     { id: 1, name: 'Men', image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/category_men_1769601294221.png' },
@@ -75,8 +68,8 @@ function Home() {
 
   return (
     <>
-      <Navbar />
       <Hero />
+
 
       {/* New Arrivals Section */}
       <section className="section" id="new-arrivals">
@@ -87,9 +80,10 @@ function Home() {
           </p>
         </div>
         <div className="product-grid animate-on-scroll">
-          {products.map((product) => (
+          {products.slice(0, 6).map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               image={product.image}
               name={product.name}
               price={product.price}
@@ -97,6 +91,7 @@ function Home() {
           ))}
         </div>
       </section>
+
 
       {/* Categories Section */}
       <section className="section" id="categories" style={{ backgroundColor: 'var(--color-light-grey)' }}>
@@ -186,8 +181,8 @@ function Home() {
         </div>
       </section>
 
-      <Footer />
     </>
+
   );
 }
 

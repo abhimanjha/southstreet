@@ -1,4 +1,9 @@
-export default function ProductCard({ image, name, price }) {
+import { useContext } from 'react';
+import { ShopContext } from '../context/ShopContext';
+
+export default function ProductCard({ image, name, price, id }) {
+    const { addToCart } = useContext(ShopContext);
+
     return (
         <div className="product-card">
             <div className="product-image-wrapper">
@@ -12,7 +17,7 @@ export default function ProductCard({ image, name, price }) {
                         <button className="size-option">L</button>
                         <button className="size-option">XL</button>
                     </div>
-                    <button className="quick-add-btn">Quick Add</button>
+                    <button className="quick-add-btn" onClick={() => addToCart(id)}>Quick Add</button>
                 </div>
             </div>
 
@@ -23,3 +28,4 @@ export default function ProductCard({ image, name, price }) {
         </div>
     );
 }
+
