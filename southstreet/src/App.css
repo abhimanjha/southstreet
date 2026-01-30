@@ -27,110 +27,59 @@
   transition: transform 0.1s ease-out;
 }
 
-/* Jacket */
-.jacket {
-  top: 20%;
-  left: 15%;
+/* Hero Floating Images */
+.hero-img {
+  width: 180px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  filter: brightness(0.9) contrast(1.1);
 }
 
-.jacket-shape {
-  width: 120px;
-  height: 180px;
-  background: linear-gradient(135deg, #000 0%, #333 50%, #666 100%);
-  border-radius: 20px 20px 40px 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  transform: rotateY(15deg) rotateX(10deg);
-}
-
-/* Shoes */
-.shoes {
-  bottom: 15%;
-  left: 20%;
-}
-
-.shoe-left, .shoe-right {
-  width: 60px;
-  height: 40px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  position: absolute;
-}
-
-.shoe-left {
-  transform: rotateX(20deg) rotateY(-10deg);
-}
-
-.shoe-right {
-  left: 70px;
-  transform: rotateX(20deg) rotateY(10deg);
-}
-
-/* Hat */
-.hat {
-  top: 10%;
+.hero-item-1 {
+  /* Jacket */
+  top: 15%;
   right: 15%;
+  z-index: 1;
 }
 
-.hat-shape {
-  width: 80px;
-  height: 60px;
-  background: #000;
-  border-radius: 50% 50% 20px 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-  transform: rotateX(-15deg) rotateZ(5deg);
-}
-
-.hat-shape::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  width: 60px;
-  height: 20px;
-  background: #333;
-  border-radius: 50%;
-}
-
-/* Pants */
-.pants {
+.hero-item-2 {
+  /* Shoes */
   bottom: 20%;
-  right: 20%;
+  left: 10%;
+  z-index: 3;
 }
 
-.pants-shape {
-  width: 100px;
-  height: 140px;
-  background: linear-gradient(to bottom, #666 0%, #000 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  transform: rotateY(-20deg) rotateX(5deg);
+.hero-item-2 .hero-img {
+  width: 160px;
+  height: 160px;
 }
 
-/* Bag */
-.bag {
-  top: 40%;
-  left: 70%;
+.hero-item-3 {
+  /* Model */
+  top: 25%;
+  left: 20%;
+  z-index: 0;
+  opacity: 0.8;
 }
 
-.bag-shape {
-  width: 70px;
-  height: 90px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  transform: rotateY(30deg) rotateX(-10deg);
+.hero-item-3 .hero-img {
+  width: 220px;
+  height: 300px;
 }
 
-.bag-shape::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 2px;
-  background: #000;
+.hero-item-4 {
+  /* Bag */
+  bottom: 10%;
+  right: 25%;
+  z-index: 2;
+}
+
+.hero-item-4 .hero-img {
+  width: 140px;
+  height: 180px;
 }
 
 .hero-overlay {

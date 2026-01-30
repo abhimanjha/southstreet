@@ -42,21 +42,18 @@ export default function Hero() {
         }}
       >
         {/* Floating Fashion Elements */}
-        <div className="fashion-element jacket" style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px) rotateX(${scrollY * 0.1}deg)` }}>
-          <div className="jacket-shape"></div>
+        {/* Floating Fashion Images */}
+        <div className="fashion-element hero-item-1" style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px) rotateX(${scrollY * 0.1}deg)` }}>
+          <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400" alt="Jacket" className="hero-img" />
         </div>
-        <div className="fashion-element shoes" style={{ transform: `translate(${mousePosition.x * -0.3}px, ${mousePosition.y * -0.3}px) rotateY(${scrollY * 0.05}deg)` }}>
-          <div className="shoe-left"></div>
-          <div className="shoe-right"></div>
+        <div className="fashion-element hero-item-2" style={{ transform: `translate(${mousePosition.x * -0.3}px, ${mousePosition.y * -0.3}px) rotateY(${scrollY * 0.05}deg)` }}>
+          <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400" alt="Dress" className="hero-img" />
         </div>
-        <div className="fashion-element hat" style={{ transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px) rotateZ(${scrollY * 0.08}deg)` }}>
-          <div className="hat-shape"></div>
+        <div className="fashion-element hero-item-3" style={{ transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px) rotateZ(${scrollY * 0.08}deg)` }}>
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400" alt="Fashion" className="hero-img" />
         </div>
-        <div className="fashion-element pants" style={{ transform: `translate(${mousePosition.x * -0.4}px, ${mousePosition.y * 0.4}px) rotateX(${scrollY * -0.06}deg)` }}>
-          <div className="pants-shape"></div>
-        </div>
-        <div className="fashion-element bag" style={{ transform: `translate(${mousePosition.x * 0.6}px, ${mousePosition.y * -0.6}px) rotateY(${scrollY * 0.03}deg)` }}>
-          <div className="bag-shape"></div>
+        <div className="fashion-element hero-item-4" style={{ transform: `translate(${mousePosition.x * -0.4}px, ${mousePosition.y * 0.4}px) rotateX(${scrollY * -0.06}deg)` }}>
+          <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400" alt="Hoodie" className="hero-img" />
         </div>
       </div>
 
