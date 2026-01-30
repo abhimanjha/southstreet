@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
     return (
         <footer className="footer">
@@ -27,11 +29,11 @@ export default function Footer() {
                     <div className="footer-column">
                         <h4>Support</h4>
                         <ul className="footer-links">
-                            <li><a href="#contact">Contact Us</a></li>
-                            <li><a href="#shipping">Shipping</a></li>
-                            <li><a href="#returns">Returns</a></li>
-                            <li><a href="#faq">FAQ</a></li>
-                            <li><a href="#size-guide">Size Guide</a></li>
+                            <li><Link to="/contact">Contact Us</Link></li>
+                            <li><Link to="/shipping">Shipping</Link></li>
+                            <li><Link to="/returns">Returns</Link></li>
+                            <li><Link to="/faq">FAQ</Link></li>
+                            <li><Link to="/size-guide">Size Guide</Link></li>
                         </ul>
                     </div>
 
@@ -65,9 +67,9 @@ export default function Footer() {
                 <div className="footer-bottom">
                     <p>&copy; 2026 SouthStreet. All rights reserved.</p>
                     <ul className="footer-legal">
-                        <li><a href="#privacy">Privacy Policy</a></li>
-                        <li><a href="#terms">Terms of Service</a></li>
-                        <li><a href="#cookies">Cookie Policy</a></li>
+                        <li><Link to="/privacy">Privacy Policy</Link></li>
+                        <li><Link to="/terms">Terms of Service</Link></li>
+                        <li><Link to="/cookies">Cookie Policy</Link></li>
                     </ul>
                 </div>
             </div>

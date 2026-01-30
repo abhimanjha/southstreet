@@ -37,7 +37,9 @@ const Cart = () => {
             {totalAmount > 0 ? (
                 <div className="checkout" style={{ textAlign: 'center', marginTop: '40px' }}>
                     <p style={{ fontSize: '1.5rem', marginBottom: '20px' }}>Subtotal: ${totalAmount}</p>
-                    <button className="btn-primary" style={{ backgroundColor: 'black', color: 'white', marginRight: '10px' }}> Checkout </button>
+                    <Link to="/checkout">
+                        <button className="btn-primary" style={{ backgroundColor: 'black', color: 'white', marginRight: '10px' }}> Checkout </button>
+                    </Link>
                     <Link to="/shop">
                         <button className="btn-primary" style={{ backgroundColor: 'white', color: 'black', border: '1px solid black' }}> Continue Shopping </button>
                     </Link>

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import { Link } from 'react-router-dom';
 
 export default function ProductCard({ image, name, price, id }) {
     const { addToCart } = useContext(ShopContext);
@@ -7,7 +8,9 @@ export default function ProductCard({ image, name, price, id }) {
     return (
         <div className="product-card">
             <div className="product-image-wrapper">
-                <img src={image} alt={name} className="product-image" />
+                <Link to={`/product/${id}`}>
+                    <img src={image} alt={name} className="product-image" />
+                </Link>
 
                 <div className="product-overlay">
                     <div className="size-selector">
@@ -22,10 +25,13 @@ export default function ProductCard({ image, name, price, id }) {
             </div>
 
             <div className="product-info">
-                <h3 className="product-name">{name}</h3>
+                <Link to={`/product/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <h3 className="product-name">{name}</h3>
+                </Link>
                 <p className="product-price">${price}</p>
             </div>
         </div>
     );
 }
+
 
