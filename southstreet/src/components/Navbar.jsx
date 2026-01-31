@@ -6,6 +6,7 @@ import LoginModal from './LoginModal';
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const { getTotalCartItems } = useContext(ShopContext);
     const totalItems = getTotalCartItems();
     const location = useLocation();
@@ -26,12 +27,18 @@ export default function Navbar() {
                 <div className="navbar-container">
                     <Link to="/" className="navbar-logo">SOUTHSTREET</Link>
 
-                    <ul className="navbar-links">
-                        <li><Link to="/shop">Shop</Link></li>
-                        <li><Link to="/men">Men</Link></li>
-                        <li><Link to="/women">Women</Link></li>
-                        <li><Link to="/collections">Collections</Link></li>
-                        <li><Link to="/about">About</Link></li>
+                    <div className={`navbar-toggle ${menuOpen ? 'active' : ''}`} onClick={() => setMenuOpen(!menuOpen)}>
+                        <span className="bar"></span>
+                        <span className="bar"></span>
+                        <span className="bar"></span>
+                    </div>
+
+                    <ul className={`navbar-links ${menuOpen ? 'active' : ''}`}>
+                        <li><Link to="/shop" onClick={() => setMenuOpen(false)}>Shop</Link></li>
+                        <li><Link to="/men" onClick={() => setMenuOpen(false)}>Men</Link></li>
+                        <li><Link to="/women" onClick={() => setMenuOpen(false)}>Women</Link></li>
+                        <li><Link to="/collections" onClick={() => setMenuOpen(false)}>Collections</Link></li>
+                        <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
                     </ul>
 
                     <div className="navbar-actions">
