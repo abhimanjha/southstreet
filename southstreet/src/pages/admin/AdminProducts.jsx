@@ -68,7 +68,12 @@ const AdminProducts = () => {
                                     </span>
                                 </td>
                                 <td style={tdStyle}>
-                                    <button style={{ marginRight: '10px', background: 'none', border: 'none', color: '#111', cursor: 'pointer', fontWeight: '500' }}>Edit</button>
+                                    <button
+                                        onClick={() => navigate(`/admin/products/edit/${product.id}`)}
+                                        style={{ marginRight: '10px', background: 'none', border: 'none', color: '#111', cursor: 'pointer', fontWeight: '500' }}
+                                    >
+                                        Edit
+                                    </button>
                                     <button style={{ background: 'none', border: 'none', color: '#e74c3c', cursor: 'pointer' }}>Delete</button>
                                 </td>
                             </tr>

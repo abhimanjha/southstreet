@@ -7,6 +7,8 @@ import Men from './pages/Men'
 import Women from './pages/Women'
 import About from './pages/About'
 import Collections from './pages/Collections'
+import NewArrivals from './pages/NewArrivals'
+import Sale from './pages/Sale'
 import Cart from './pages/Cart'
 import Search from './pages/Search'
 import Product from './pages/Product'
@@ -27,6 +29,12 @@ import AdminOrders from './pages/admin/AdminOrders'
 import AddProduct from './pages/admin/AddProduct'
 import OrderDetail from './pages/admin/OrderDetail'
 import LowStock from './pages/admin/LowStock'
+import Categories from './pages/admin/Categories'
+import Discounts from './pages/admin/Discounts'
+import Users from './pages/admin/Users'
+import Reports from './pages/admin/Reports'
+import Settings from './pages/admin/Settings'
+import EditProduct from './pages/admin/EditProduct'
 import './App.css'
 
 function App() {
@@ -43,18 +51,21 @@ function App() {
             <Route path='orders' element={<AdminOrders />} />
             <Route path='orders/:id' element={<OrderDetail />} />
             <Route path='low-stock' element={<LowStock />} />
-            <Route path='users' element={<h1 style={{ fontSize: '2rem' }}>User Management</h1>} />
-            <Route path='categories' element={<h1 style={{ fontSize: '2rem' }}>Category Management</h1>} />
-            <Route path='discounts' element={<h1 style={{ fontSize: '2rem' }}>Discount Management</h1>} />
-            <Route path='reports' element={<h1 style={{ fontSize: '2rem' }}>Reports & Analytics</h1>} />
-            <Route path='settings' element={<h1 style={{ fontSize: '2rem' }}>Admin Settings</h1>} />
+            <Route path='users' element={<Users />} />
+            <Route path='categories' element={<Categories />} />
+            <Route path='discounts' element={<Discounts />} />
+            <Route path='reports' element={<Reports />} />
+            <Route path='settings' element={<Settings />} />
+            <Route path='products/edit/:id' element={<EditProduct />} />
           </Route>
 
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
+            <Route path="new-arrivals" element={<NewArrivals />} />
             <Route path="men" element={<Men />} />
             <Route path="women" element={<Women />} />
+            <Route path="sale" element={<Sale />} />
             <Route path="about" element={<About />} />
             <Route path="collections" element={<Collections />} />
             <Route path="cart" element={<Cart />} />
