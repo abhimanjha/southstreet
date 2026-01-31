@@ -25,6 +25,8 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminOrders from './pages/admin/AdminOrders'
 import AddProduct from './pages/admin/AddProduct'
+import OrderDetail from './pages/admin/OrderDetail'
+import LowStock from './pages/admin/LowStock'
 import './App.css'
 
 function App() {
@@ -39,7 +41,13 @@ function App() {
             <Route path='products' element={<AdminProducts />} />
             <Route path='products/add' element={<AddProduct />} />
             <Route path='orders' element={<AdminOrders />} />
+            <Route path='orders/:id' element={<OrderDetail />} />
+            <Route path='low-stock' element={<LowStock />} />
+            <Route path='users' element={<h1 style={{ fontSize: '2rem' }}>User Management</h1>} />
+            <Route path='categories' element={<h1 style={{ fontSize: '2rem' }}>Category Management</h1>} />
             <Route path='discounts' element={<h1 style={{ fontSize: '2rem' }}>Discount Management</h1>} />
+            <Route path='reports' element={<h1 style={{ fontSize: '2rem' }}>Reports & Analytics</h1>} />
+            <Route path='settings' element={<h1 style={{ fontSize: '2rem' }}>Admin Settings</h1>} />
           </Route>
 
           <Route path="/" element={<Layout />}>

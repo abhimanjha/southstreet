@@ -5,12 +5,17 @@ const db = require('./config/db');
 
 dotenv.config();
 
+const adminRoutes = require('./routes/adminRoutes');
+
 const app = express();
 const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/api/admin', adminRoutes);
 
 // Test Route
 app.get('/', (req, res) => {

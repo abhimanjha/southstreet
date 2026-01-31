@@ -13,7 +13,7 @@ const AddProduct = () => {
         subCategory: '',
         stock: '',
         weight: '',
-        images: [''], // Array of image URLs
+        images: [''], // Array of image URLs 
         sizes: [],
         colors: []
     });
@@ -118,14 +118,9 @@ const AddProduct = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                             {formData.images.map((url, index) => (
                                 <div key={index} style={{ display: 'flex', gap: '10px' }}>
-                                    <input
-                                        type="text"
-                                        value={url}
-                                        onChange={(e) => handleImageChange(index, e.target.value)}
-                                        style={inputStyle}
-                                        placeholder={`Image URL ${index + 1}`}
-                                        required={index === 0}
-                                    />
+
+                                    <input type="file" multiple onChange={(e) => setFiles(e.target.files)} />
+
                                     {url && (
                                         <img src={url} alt="Preview" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
                                     )}
