@@ -1,26 +1,38 @@
-const mysql = require('mysql2');
+const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'southstreet_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
-
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error('Error connecting to MySQL Database:', err.message);
-    } else {
-        console.log('Connected to MySQL Database!');
-        connection.release();
+const sequelize = new Sequelize(
+    process.env.DB_NAME || 'southstreet_db',
+    process.env.DB_USER || 'root',
+    process.env.DB_PASSWORD || '',
+    {
+        host: process.env.DB_HOST || 'localhost',
+        port: process.env.DB_PORT || 3306,
+        dialect: 'mysql',
+        logging: process.env.NODE_ENV === 'development' ? console.log : false,
+        pool: {
+            max: 10,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        },
+        define: {
+            timestamps: true,
+            underscored: false,
+            freezeTableName: true
+        }
     }
-});
+);
 
-module.exports = db.promise();
+// Test connection
+sequelize.authenticate()
+    .then(() => {
+        console.log('✓ Database connection established successfully');
+    })
+    .catch(err => {
+        console.error('✗ Unable to connect to database:', err.message);
+    });
+
+module.exports = sequelize;

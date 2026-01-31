@@ -14,15 +14,21 @@ const Shop = () => {
                 </p>
             </div>
             <div className="product-grid animate-on-scroll visible">
-                {products.map((product) => (
-                    <ProductCard
-                        key={product.id}
-                        id={product.id}
-                        image={product.image}
-                        name={product.name}
-                        price={product.price}
-                    />
-                ))}
+                {products.map((product) => {
+                    const image = product.images && product.images.length > 0
+                        ? product.images[0]
+                        : 'https://via.placeholder.com/300';
+
+                    return (
+                        <ProductCard
+                            key={product.id}
+                            id={product.id}
+                            image={image}
+                            name={product.name}
+                            price={product.price}
+                        />
+                    );
+                })}
             </div>
         </section>
     );

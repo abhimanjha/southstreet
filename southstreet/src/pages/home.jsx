@@ -50,7 +50,7 @@ function Home() {
 
   // Category data
   const categories = [
-    { id: 1, name: 'Men', image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/category_men_1769601294221.png' },
+    { id: 1, name: 'Men', image: 'https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=800' },
     { id: 2, name: 'Women', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800' },
     { id: 3, name: 'Streetwear', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800' },
     { id: 4, name: 'Luxury', image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800' },

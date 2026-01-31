@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import ProductCard from "../components/ProductCard";
+import { formatCurrency } from '../utils/format';
 
 const Product = () => {
     const { productId } = useParams();
@@ -15,10 +16,14 @@ const Product = () => {
         const foundProduct = products.find((item) => item.id === Number(productId));
         if (foundProduct) {
             setProduct(foundProduct);
-            setImage(foundProduct.image);
+            // Handle images array from backend
+            const firstImage = foundProduct.images && foundProduct.images.length > 0
+                ? foundProduct.images[0]
+                : 'https://via.placeholder.com/500';
+            setImage(firstImage);
             // Simple logic for related products: items with same category, excluding current
             const related = products.filter(
-                (item) => item.category === foundProduct.category && item.id !== foundProduct.id
+                (item) => item.category?.id === foundProduct.category?.id && item.id !== foundProduct.id
             ).slice(0, 4);
             setRelatedProducts(related);
         }
@@ -64,7 +69,7 @@ const Product = () => {
                 {/* Details Section */}
                 <div className="product-details" style={{ flex: 1 }}>
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{product.name}</h1>
-                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' }}>${product.price}</p>
+                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' }}>{formatCurrency(product.price)}</p>
                     <p style={{ lineHeight: '1.6', color: '#555', marginBottom: '30px' }}>{product.description}</p>
 
                     <div className="size-selector" style={{ marginBottom: '30px' }}>
@@ -90,7 +95,13 @@ const Product = () => {
                     </div>
 
                     <button
-                        onClick={() => addToCart(product.id)}
+                        onClick={() => {
+                            if (!size) {
+                                alert('Please select a size');
+                                return;
+                            }
+                            addToCart(product.id, 1, size);
+                        }}
                         className="btn-primary"
                         style={{
                             backgroundColor: 'black',
@@ -121,15 +132,21 @@ const Product = () => {
                 </div>
                 <div className="product-grid">
                     {relatedProducts.length > 0 ? (
-                        relatedProducts.map((item) => (
-                            <ProductCard
-                                key={item.id}
-                                id={item.id}
-                                image={item.image}
-                                name={item.name}
-                                price={item.price}
-                            />
-                        ))
+                        relatedProducts.map((item) => {
+                            const image = item.images && item.images.length > 0
+                                ? item.images[0]
+                                : 'https://via.placeholder.com/300';
+
+                            return (
+                                <ProductCard
+                                    key={item.id}
+                                    id={item.id}
+                                    image={image}
+                                    name={item.name}
+                                    price={item.price}
+                                />
+                            );
+                        })
                     ) : (
                         <p style={{ textAlign: 'center' }}>No related products found.</p>
                     )}

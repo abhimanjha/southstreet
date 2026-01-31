@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
+import { isAuthenticated } from '../utils/auth';
 import LoginModal from './LoginModal';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const { getTotalCartItems } = useContext(ShopContext);
-    const totalItems = getTotalCartItems();
+    const { getCartItemsCount } = useContext(ShopContext);
+    const totalItems = getCartItemsCount();
     const location = useLocation();
     const isHome = location.pathname === '/';
 
@@ -20,6 +21,16 @@ export default function Navbar() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const navigate = useNavigate();
+
+    const handleUserIconClick = () => {
+        if (isAuthenticated()) {
+            navigate('/account');
+        } else {
+            setIsLoginModalOpen(true);
+        }
+    };
 
     return (
         <>
@@ -53,7 +64,7 @@ export default function Navbar() {
                             </svg>
                             {totalItems > 0 && <span className="cart-badge" style={{ position: 'absolute', top: '-5px', right: '-5px', backgroundColor: 'red', color: 'white', borderRadius: '50%', padding: '0.2rem 0.5rem', fontSize: '0.7rem' }}>{totalItems}</span>}
                         </Link>
-                        <button onClick={() => setIsLoginModalOpen(true)} style={{ background: 'none', border: 'none', padding: 0 }}>
+                        <button onClick={handleUserIconClick} style={{ background: 'none', border: 'none', padding: 0 }}>
                             <svg className="navbar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>

@@ -10,11 +10,10 @@ import {
     Calendar,
     CheckCircle2,
     Clock,
-    AlertCircle,
-    XCircle,
     Printer,
     Mail
 } from 'lucide-react';
+import { formatCurrency } from '../../utils/format';
 
 const OrderDetail = () => {
     const { id } = useParams();
@@ -52,10 +51,10 @@ const OrderDetail = () => {
                     { id: 1, name: 'Premium Cotton Hoodie', size: 'L', color: 'Midnight Black', price: 89.00, quantity: 1, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=100' },
                     { id: 2, name: 'Urban Graphic Tee', size: 'M', color: 'White', price: 31.00, quantity: 1, image: 'https://images.unsplash.com/photo-1521334884326-7543f23af066?w=100' },
                 ],
-                subtotal: '$120.00',
-                shipping: '$0.00',
-                tax: '$10.20',
-                total: '$130.20'
+                subtotal: 120.00,
+                shipping: 0.00,
+                tax: 10.20,
+                total: 130.20
             });
             setLoading(false);
         }, 500);
@@ -139,21 +138,21 @@ const OrderDetail = () => {
                                         <p style={{ margin: 0, fontSize: '0.85rem', color: '#888' }}>Size: {item.size} | Color: {item.color}</p>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        <p style={{ margin: '0 0 5px 0', fontWeight: 600 }}>${item.price.toFixed(2)}</p>
+                                        <p style={{ margin: '0 0 5px 0', fontWeight: 600 }}>{formatCurrency(item.price)}</p>
                                         <p style={{ margin: 0, fontSize: '0.85rem', color: '#888' }}>Qty: {item.quantity}</p>
                                     </div>
                                     <div style={{ textAlign: 'right', minWidth: '80px' }}>
-                                        <p style={{ margin: 0, fontWeight: 700 }}>${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p style={{ margin: '0 0 5px 0', fontWeight: 700 }}>{formatCurrency(item.price * item.quantity)}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         <div style={{ marginTop: '30px', borderTop: '1px solid #eee', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
-                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Subtotal:</span> <span>{order.subtotal}</span></div>
-                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Shipping:</span> <span>{order.shipping}</span></div>
-                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Tax:</span> <span>{order.tax}</span></div>
-                            <div style={{ ...summaryRowStyle, fontSize: '1.2rem', fontWeight: 700, marginTop: '10px', color: '#111' }}><span>Total:</span> <span>{order.total}</span></div>
+                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Subtotal:</span> <span>{formatCurrency(order.subtotal)}</span></div>
+                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Shipping:</span> <span>{formatCurrency(order.shipping)}</span></div>
+                            <div style={summaryRowStyle}><span style={{ color: '#888' }}>Tax:</span> <span>{formatCurrency(order.tax)}</span></div>
+                            <div style={{ ...summaryRowStyle, fontSize: '1.2rem', fontWeight: 700, marginTop: '10px', color: '#111' }}><span>Total:</span> <span>{formatCurrency(order.total)}</span></div>
                         </div>
                     </div>
 
@@ -175,7 +174,7 @@ const OrderDetail = () => {
                                 icon={CreditCard}
                                 title="Payment Confirmed"
                                 date="Oct 25, 2023, 10:46 AM"
-                                description="Payment of $130.20 via Credit Card was confirmed."
+                                description={`Payment of ${formatCurrency(order.total)} via Credit Card was confirmed.`}
                                 isLast={false}
                                 color="#2ecc71"
                             />

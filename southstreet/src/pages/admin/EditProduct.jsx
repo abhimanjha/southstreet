@@ -160,7 +160,7 @@ const EditProduct = () => {
                         <h2 style={sectionTitleStyle}>Inventory & Pricing</h2>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                             <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Price ($)</label>
+                                <label style={labelStyle}>Price (INR)</label>
                                 <input
                                     type="number"
                                     name="price"
@@ -171,7 +171,7 @@ const EditProduct = () => {
                                 />
                             </div>
                             <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Discount Price ($)</label>
+                                <label style={labelStyle}>Discount Price (INR)</label>
                                 <input
                                     type="number"
                                     name="discountPrice"

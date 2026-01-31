@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
+import { formatCurrency } from '../utils/format';
 export default function ProductCard({ image, name, price, id }) {
     const { addToCart } = useContext(ShopContext);
 
@@ -28,7 +29,7 @@ export default function ProductCard({ image, name, price, id }) {
                 <Link to={`/product/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <h3 className="product-name">{name}</h3>
                 </Link>
-                <p className="product-price">${price}</p>
+                <p className="product-price">{formatCurrency(price)}</p>
             </div>
         </div>
     );

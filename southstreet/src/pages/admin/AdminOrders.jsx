@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, ChevronLeft, ChevronRight, Eye, Download, MoreVertical } from 'lucide-react';
+import { formatCurrency } from '../../utils/format';
 
 const AdminOrders = () => {
     const navigate = useNavigate();
@@ -11,13 +12,13 @@ const AdminOrders = () => {
 
     // Mock Data
     const [orders, setOrders] = useState([
-        { id: '#ORD-7832', customer: 'James Wilson', email: 'james@example.com', date: 'Oct 25, 2023', total: '$120.00', items: 2, status: 'Pending' },
-        { id: '#ORD-7831', customer: 'Linda Taylor', email: 'linda@example.com', date: 'Oct 25, 2023', total: '$850.50', items: 5, status: 'Processing' },
-        { id: '#ORD-7830', customer: 'Robert Martinez', email: 'robert@example.com', date: 'Oct 24, 2023', total: '$45.00', items: 1, status: 'Shipped' },
-        { id: '#ORD-7829', customer: 'Alex Johnson', email: 'alex@example.com', date: 'Oct 24, 2023', total: '$145.00', items: 3, status: 'Delivered' },
-        { id: '#ORD-7828', customer: 'Sarah Williams', email: 'sarah@example.com', date: 'Oct 24, 2023', total: '$290.50', items: 2, status: 'Cancelled' },
-        { id: '#ORD-7827', customer: 'Michael Brown', email: 'michael@example.com', date: 'Oct 23, 2023', total: '$85.00', items: 1, status: 'Delivered' },
-        { id: '#ORD-7826', customer: 'Emily Davis', email: 'emily@example.com', date: 'Oct 23, 2023', total: '$450.00', items: 4, status: 'Processing' },
+        { id: '#ORD-7832', customer: 'James Wilson', email: 'james@example.com', date: 'Oct 25, 2023', total: 120.00, items: 2, status: 'Pending' },
+        { id: '#ORD-7831', customer: 'Linda Taylor', email: 'linda@example.com', date: 'Oct 25, 2023', total: 850.50, items: 5, status: 'Processing' },
+        { id: '#ORD-7830', customer: 'Robert Martinez', email: 'robert@example.com', date: 'Oct 24, 2023', total: 45.00, items: 1, status: 'Shipped' },
+        { id: '#ORD-7829', customer: 'Alex Johnson', email: 'alex@example.com', date: 'Oct 24, 2023', total: 145.00, items: 3, status: 'Delivered' },
+        { id: '#ORD-7828', customer: 'Sarah Williams', email: 'sarah@example.com', date: 'Oct 24, 2023', total: 290.50, items: 2, status: 'Cancelled' },
+        { id: '#ORD-7827', customer: 'Michael Brown', email: 'michael@example.com', date: 'Oct 23, 2023', total: 85.00, items: 1, status: 'Delivered' },
+        { id: '#ORD-7826', customer: 'Emily Davis', email: 'emily@example.com', date: 'Oct 23, 2023', total: 450.00, items: 4, status: 'Processing' },
     ]);
 
     const filteredOrders = orders.filter(order => {
@@ -141,7 +142,7 @@ const AdminOrders = () => {
                                 </td>
                                 <td style={tdStyle}>{order.date}</td>
                                 <td style={tdStyle}>{order.items} Items</td>
-                                <td style={{ ...tdStyle, fontWeight: '600' }}>{order.total}</td>
+                                <td style={{ ...tdStyle, fontWeight: '600' }}>{formatCurrency(order.total)}</td>
                                 <td style={tdStyle}>
                                     <span style={{
                                         padding: '6px 12px',

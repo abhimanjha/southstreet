@@ -1,144 +1,163 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import { productsAPI, cartAPI, categoriesAPI } from "../services/api";
+import { getSessionId } from "../utils/auth";
 
 export const ShopContext = createContext(null);
 
 export const ShopContextProvider = (props) => {
-    const [products] = useState([
-        {
-            id: 1,
-            name: 'Leather Jacket',
-            price: 899,
-            image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_jacket_1_1769601137269.png',
-            category: 'men',
-            description: 'A premium leather jacket crafted from the finest materials. Features a timeless design with modern cuts, perfect for any occasion. Durable, stylish, and comfortable.',
-            images: [
-                'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_jacket_1_1769601137269.png',
-                'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600',
-                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600'
-            ]
-        },
-        {
-            id: 2,
-            name: 'Silk Midi Dress',
-            price: 649,
-            image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_dress_beige_1769601164537.png',
-            category: 'women',
-            description: 'Elegant silk midi dress with a flattering silhouette. The soft fabric drapes beautifully, making it an ideal choice for evening events or sophisticated gatherings.',
-            images: [
-                'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_dress_beige_1769601164537.png',
-                'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
-                'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600'
-            ]
-        },
-        {
-            id: 3,
-            name: 'Wool Overcoat',
-            price: 1299,
-            image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_coat_grey_1769601192016.png',
-            category: 'men',
-            description: 'Stay warm and stylish with this structured wool overcoat. Designed with precision tailoring and high-quality wool blend for maximum comfort and durability.',
-            images: [
-                'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_coat_grey_1769601192016.png',
-                'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1000',
-                'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600'
-            ]
-        },
-        {
-            id: 4,
-            name: 'Premium Sneakers',
-            price: 399,
-            image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_sneakers_white_1769601222724.png',
-            category: 'men',
-            description: 'Handcrafted sneakers combining luxury and streetwear aesthetics. Made with premium leather and a comfortable sole for all-day wear.',
-            images: [
-                'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_sneakers_white_1769601222724.png',
-                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600',
-                'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600'
-            ]
-        },
-        {
-            id: 5,
-            name: 'Leather Handbag',
-            price: 799,
-            image: 'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_bag_taupe_1769601252148.png',
-            category: 'women',
-            description: 'A sophisticated leather handbag featuring a minimalist design. spacious enough for your essentials while adding a touch of elegance to any outfit.',
-            images: [
-                'C:/Users/PRASHANT KUMAR JHA/.gemini/antigravity/brain/35bdb6fb-77d1-41a7-b015-2bb64c4127d2/product_bag_taupe_1769601252148.png',
-                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600',
-                'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600'
-            ]
-        },
-        {
-            id: 6,
-            name: 'Cashmere Sweater',
-            price: 549,
-            image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600',
-            category: 'women',
-            description: 'Luxuriously soft cashmere sweater in a versatile neutral tone. A winter essential that offers both warmth and timeless style.',
-            images: [
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600',
-                'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600',
-                'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600'
-            ]
-        },
-    ]);
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [cart, setCart] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const [cartItems, setCartItems] = useState({});
-    const [searchQuery, setSearchQuery] = useState("");
+    // Initialize session ID for guest users
+    useEffect(() => {
+        getSessionId();
+    }, []);
 
-    const addToCart = (itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
-    };
+    // Fetch products on mount
+    useEffect(() => {
+        fetchProducts();
+        fetchCategories();
+        fetchCart();
+    }, []);
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev) => {
-            const newCart = { ...prev };
-            if (newCart[itemId] > 0) {
-                newCart[itemId] -= 1;
-            }
-            if (newCart[itemId] === 0) {
-                delete newCart[itemId];
-            }
-            return newCart;
-        });
-    };
-
-    const updateCartItemCount = (newAmount, itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: newAmount }));
-    };
-
-    const getTotalCartAmount = () => {
-        let totalAmount = 0;
-        for (const item in cartItems) {
-            if (cartItems[item] > 0) {
-                let itemInfo = products.find((product) => product.id === Number(item));
-                totalAmount += cartItems[item] * itemInfo.price;
-            }
+    const fetchProducts = async (params = {}) => {
+        try {
+            setLoading(true);
+            const response = await productsAPI.getAll(params);
+            setProducts(response.data.data.products || []);
+            setError(null);
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            setError(err.response?.data?.message || 'Failed to fetch products');
+        } finally {
+            setLoading(false);
         }
-        return totalAmount;
     };
 
-    const getTotalCartItems = () => {
-        let totalItem = 0;
-        for (const item in cartItems) {
-            if (cartItems[item] > 0) {
-                totalItem += cartItems[item];
-            }
+    const fetchCategories = async () => {
+        try {
+            const response = await categoriesAPI.getAll();
+            setCategories(response.data.data.categories || []);
+        } catch (err) {
+            console.error('Error fetching categories:', err);
         }
-        return totalItem;
-    }
+    };
+
+    const fetchCart = async () => {
+        try {
+            const response = await cartAPI.get();
+            setCart(response.data.data.cart);
+        } catch (err) {
+            console.error('Error fetching cart:', err);
+        }
+    };
+
+    const addToCart = async (productId, quantity = 1, size = null, color = null) => {
+        try {
+            const response = await cartAPI.addItem({
+                productId,
+                quantity,
+                size,
+                color
+            });
+            setCart(response.data.data.cart);
+            return { success: true };
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            return {
+                success: false,
+                message: err.response?.data?.message || 'Failed to add to cart'
+            };
+        }
+    };
+
+    const removeFromCart = async (itemId) => {
+        try {
+            await cartAPI.removeItem(itemId);
+            await fetchCart(); // Refresh cart
+            return { success: true };
+        } catch (err) {
+            console.error('Error removing from cart:', err);
+            return {
+                success: false,
+                message: err.response?.data?.message || 'Failed to remove from cart'
+            };
+        }
+    };
+
+    const updateCartItemQuantity = async (itemId, quantity) => {
+        try {
+            await cartAPI.updateItem(itemId, { quantity });
+            await fetchCart(); // Refresh cart
+            return { success: true };
+        } catch (err) {
+            console.error('Error updating cart:', err);
+            return {
+                success: false,
+                message: err.response?.data?.message || 'Failed to update cart'
+            };
+        }
+    };
+
+    const clearCart = async () => {
+        try {
+            await cartAPI.clear();
+            setCart(null);
+            return { success: true };
+        } catch (err) {
+            console.error('Error clearing cart:', err);
+            return {
+                success: false,
+                message: err.response?.data?.message || 'Failed to clear cart'
+            };
+        }
+    };
+
+    const getCartItemsCount = () => {
+        if (!cart || !cart.items) return 0;
+        return cart.items.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    const getCartTotal = () => {
+        if (!cart || !cart.items) return 0;
+        return cart.items.reduce((total, item) => {
+            const price = item.product.discountPrice || item.product.price;
+            return total + (price * item.quantity);
+        }, 0);
+    };
+
+    const getCartItems = () => {
+        if (!cart || !cart.items) return [];
+        return cart.items.map(item => ({
+            ...item,
+            product: {
+                ...item.product,
+                // Ensure images is an array
+                images: Array.isArray(item.product.images)
+                    ? item.product.images
+                    : (item.product.images ? [item.product.images] : [])
+            }
+        }));
+    };
 
     const contextValue = {
         products,
-        cartItems,
+        categories,
+        cart,
+        loading,
+        error,
+        fetchProducts,
         addToCart,
         removeFromCart,
-        updateCartItemCount,
-        getTotalCartAmount,
-        getTotalCartItems,
-        searchQuery,
-        setSearchQuery
+        updateCartItemQuantity,
+        clearCart,
+        getCartItemsCount,
+        getCartTotal,
+        getCartItems,
+        refreshCart: fetchCart
     };
 
     return (

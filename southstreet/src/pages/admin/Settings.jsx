@@ -4,7 +4,7 @@ const Settings = () => {
     const [settings, setSettings] = useState({
         storeName: 'SouthStreet Wear',
         contactEmail: 'admin@southstreet.com',
-        currency: 'USD',
+        currency: 'INR',
         maintenanceMode: false,
         lowStockThreshold: 10,
         enableNotifications: true
@@ -44,10 +44,10 @@ const Settings = () => {
                     <div style={inputGroupStyle}>
                         <label style={labelStyle}>Store Currency</label>
                         <select name="currency" value={settings.currency} onChange={handleChange} style={inputStyle}>
+                            <option value="INR">INR (₹)</option>
                             <option value="USD">USD ($)</option>
                             <option value="EUR">EUR (€)</option>
                             <option value="GBP">GBP (£)</option>
-                            <option value="INR">INR (₹)</option>
                         </select>
                     </div>
                     <div style={inputGroupStyle}>

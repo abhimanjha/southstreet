@@ -21,6 +21,7 @@ import SizeGuide from './pages/SizeGuide'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import CookiePolicy from './pages/CookiePolicy'
+import UserDashboard from './pages/UserDashboard'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
@@ -35,6 +36,7 @@ import Users from './pages/admin/Users'
 import Reports from './pages/admin/Reports'
 import Settings from './pages/admin/Settings'
 import EditProduct from './pages/admin/EditProduct'
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute'
 import './App.css'
 
 function App() {
@@ -44,19 +46,21 @@ function App() {
         <Routes>
           {/* Admin Routes */}
           <Route path='/admin/login' element={<AdminLogin />} />
-          <Route path='/admin' element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path='products' element={<AdminProducts />} />
-            <Route path='products/add' element={<AddProduct />} />
-            <Route path='orders' element={<AdminOrders />} />
-            <Route path='orders/:id' element={<OrderDetail />} />
-            <Route path='low-stock' element={<LowStock />} />
-            <Route path='users' element={<Users />} />
-            <Route path='categories' element={<Categories />} />
-            <Route path='discounts' element={<Discounts />} />
-            <Route path='reports' element={<Reports />} />
-            <Route path='settings' element={<Settings />} />
-            <Route path='products/edit/:id' element={<EditProduct />} />
+          <Route path='/admin' element={<AdminProtectedRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path='products' element={<AdminProducts />} />
+              <Route path='products/add' element={<AddProduct />} />
+              <Route path='orders' element={<AdminOrders />} />
+              <Route path='orders/:id' element={<OrderDetail />} />
+              <Route path='low-stock' element={<LowStock />} />
+              <Route path='users' element={<Users />} />
+              <Route path='categories' element={<Categories />} />
+              <Route path='discounts' element={<Discounts />} />
+              <Route path='reports' element={<Reports />} />
+              <Route path='settings' element={<Settings />} />
+              <Route path='products/edit/:id' element={<EditProduct />} />
+            </Route>
           </Route>
 
           <Route path="/" element={<Layout />}>
@@ -79,7 +83,9 @@ function App() {
             <Route path="size-guide" element={<SizeGuide />} />
             <Route path="privacy" element={<PrivacyPolicy />} />
             <Route path="terms" element={<TermsOfService />} />
+
             <Route path="cookies" element={<CookiePolicy />} />
+            <Route path="account" element={<UserDashboard />} />
           </Route>
         </Routes>
       </BrowserRouter>

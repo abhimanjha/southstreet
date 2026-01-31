@@ -9,6 +9,7 @@ import {
     RefreshCw,
     Search
 } from 'lucide-react';
+import { formatCurrency } from '../../utils/format';
 
 const LowStock = () => {
     const navigate = useNavigate();
@@ -107,7 +108,7 @@ const LowStock = () => {
                                     </div>
                                 </td>
                                 <td style={tdStyle}>{product.category}</td>
-                                <td style={tdStyle}>${product.price.toFixed(2)}</td>
+                                <td style={tdStyle}>{formatCurrency(product.price)}</td>
                                 <td style={tdStyle}>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                         <span style={{
@@ -179,7 +180,6 @@ const restockBtnStyle = {
     cursor: 'pointer',
     borderLeft: '1px solid #eee',
     transition: 'all 0.2s',
-    // hover style via JS in component would be better but keeping it simple here
 };
 
 export default LowStock;
