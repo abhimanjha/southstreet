@@ -46,7 +46,7 @@ const getProducts = async (req, res, next) => {
             order: [[sort, order]]
         });
 
-        res.json({  
+        res.json({
             success: true,
             data: {
                 products: rows,
@@ -96,7 +96,24 @@ const getProduct = async (req, res, next) => {
 // @access  Private/Admin
 const createProduct = async (req, res, next) => {
     try {
-        const productData = req.body;
+        console.log('Create Product Body:', req.body);
+        const productData = { ...req.body };
+
+        // Parse JSON fields from strings (FormData limitation)
+        if (typeof productData.sizes === 'string') {
+            try {
+                productData.sizes = JSON.parse(productData.sizes);
+            } catch (e) {
+                productData.sizes = [];
+            }
+        }
+        if (typeof productData.colors === 'string') {
+            try {
+                productData.colors = JSON.parse(productData.colors);
+            } catch (e) {
+                productData.colors = [];
+            }
+        }
 
         // Handle file uploads
         if (req.files && req.files.length > 0) {
@@ -127,6 +144,22 @@ const updateProduct = async (req, res, next) => {
                 success: false,
                 message: 'Product not found'
             });
+        }
+
+        // Parse JSON fields from strings
+        if (typeof req.body.sizes === 'string') {
+            try {
+                req.body.sizes = JSON.parse(req.body.sizes);
+            } catch (e) {
+                req.body.sizes = [];
+            }
+        }
+        if (typeof req.body.colors === 'string') {
+            try {
+                req.body.colors = JSON.parse(req.body.colors);
+            } catch (e) {
+                req.body.colors = [];
+            }
         }
 
         // Handle file uploads

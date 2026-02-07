@@ -56,6 +56,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const userRoutes = require('./routes/userRoutes');
 const discountRoutes = require('./routes/discountRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Mount routes
 app.use('/api/auth', authRoutes);
@@ -66,6 +67,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/discounts', discountRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -112,7 +114,7 @@ app.use(errorHandler);
 const startServer = async () => {
     try {
         // Sync database
-        await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
+        await sequelize.sync({ alter: false });
         console.log('✓ Database synchronized');
 
         // Start server

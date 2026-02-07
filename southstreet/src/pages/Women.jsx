@@ -1,10 +1,17 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import { ShopContext } from "../context/ShopContext";
 
 const Women = () => {
-    const { products } = useContext(ShopContext);
-    const womenProducts = products.filter(product => product.category === 'women');
+    const { products, fetchProducts } = useContext(ShopContext);
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+    const womenProducts = products.filter(product => {
+        const category = product.category?.name || product.category;
+        return typeof category === 'string' && category.toLowerCase() === 'women';
+    });
 
     return (
         <section className="section" id="women">
@@ -15,15 +22,21 @@ const Women = () => {
                 </p>
             </div>
             <div className="product-grid animate-on-scroll visible">
-                {womenProducts.map((product) => (
-                    <ProductCard
-                        key={product.id}
-                        id={product.id}
-                        image={product.image}
-                        name={product.name}
-                        price={product.price}
-                    />
-                ))}
+                {womenProducts.map((product) => {
+                    const image = product.images && product.images.length > 0
+                        ? product.images[0]
+                        : 'https://via.placeholder.com/300';
+
+                    return (
+                        <ProductCard
+                            key={product.id}
+                            id={product.id}
+                            image={image}
+                            name={product.name}
+                            price={product.price}
+                        />
+                    );
+                })}
             </div>
         </section>
     );

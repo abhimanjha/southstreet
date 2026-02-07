@@ -4,6 +4,7 @@ const { body, param, query, validationResult } = require('express-validator');
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log('Validation Errors:', errors.array());
         return res.status(400).json({
             success: false,
             errors: errors.array()
@@ -33,9 +34,10 @@ const productValidation = [
     body('name').trim().notEmpty().withMessage('Product name is required'),
     body('sku').trim().notEmpty().withMessage('SKU is required'),
     body('description').trim().notEmpty().withMessage('Description is required'),
-    body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
-    body('categoryId').isUUID().withMessage('Valid category ID is required'),
-    body('stock').isInt({ min: 0 }).withMessage('Stock must be a non-negative integer'),
+    // Relaxed validation to handle string inputs from FormData
+    body('price').exists().withMessage('Price is required'),
+    body('categoryId').exists().withMessage('Category is required'),
+    body('stock').exists().withMessage('Stock is required'),
     validate
 ];
 

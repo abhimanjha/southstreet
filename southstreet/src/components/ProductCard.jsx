@@ -3,6 +3,8 @@ import { ShopContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
 import { formatCurrency } from '../utils/format';
+import { getImageUrl } from '../utils/imageUrl';
+
 export default function ProductCard({ image, name, price, id }) {
     const { addToCart } = useContext(ShopContext);
 
@@ -10,7 +12,7 @@ export default function ProductCard({ image, name, price, id }) {
         <div className="product-card">
             <div className="product-image-wrapper">
                 <Link to={`/product/${id}`}>
-                    <img src={image} alt={name} className="product-image" />
+                    <img src={getImageUrl(image)} alt={name} className="product-image" />
                 </Link>
 
                 <div className="product-overlay">

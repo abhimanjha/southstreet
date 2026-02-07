@@ -11,7 +11,7 @@ const Search = () => {
     // For now we rely on the global context state.
 
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name.toLowerCase().includes((searchQuery || '').toLowerCase())
     );
 
     return (
@@ -40,15 +40,21 @@ const Search = () => {
 
             {filteredProducts.length > 0 ? (
                 <div className="product-grid">
-                    {filteredProducts.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            image={product.image}
-                            name={product.name}
-                            price={product.price}
-                            id={product.id}
-                        />
-                    ))}
+                    {filteredProducts.map((product) => {
+                        const image = product.images && product.images.length > 0
+                            ? product.images[0]
+                            : 'https://via.placeholder.com/300';
+
+                        return (
+                            <ProductCard
+                                key={product.id}
+                                image={image}
+                                name={product.name}
+                                price={product.price}
+                                id={product.id}
+                            />
+                        );
+                    })}
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', marginTop: '40px' }}>

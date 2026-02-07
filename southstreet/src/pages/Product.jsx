@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import ProductCard from "../components/ProductCard";
 import { formatCurrency } from '../utils/format';
+import { getImageUrl } from '../utils/imageUrl';
 
 const Product = () => {
     const { productId } = useParams();
@@ -13,7 +14,7 @@ const Product = () => {
     const [relatedProducts, setRelatedProducts] = useState([]);
 
     useEffect(() => {
-        const foundProduct = products.find((item) => item.id === Number(productId));
+        const foundProduct = products.find((item) => item.id === productId);
         if (foundProduct) {
             setProduct(foundProduct);
             // Handle images array from backend
@@ -48,7 +49,7 @@ const Product = () => {
                         {product.images && product.images.map((img, index) => (
                             <img
                                 key={index}
-                                src={img}
+                                src={getImageUrl(img)}
                                 onClick={() => setImage(img)}
                                 alt={`Thumbnail ${index}`}
                                 style={{
@@ -62,7 +63,7 @@ const Product = () => {
                         ))}
                     </div>
                     <div className="main-image-container" style={{ width: '100%' }}>
-                        <img src={image} alt={product.name} style={{ width: '100%', height: '500px', objectFit: 'cover' }} />
+                        <img src={getImageUrl(image)} alt={product.name} style={{ width: '100%', height: '500px', objectFit: 'cover' }} />
                     </div>
                 </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { authAPI } from '../services/api';
 import { setAuthToken, setUser } from '../utils/auth';
 
@@ -90,6 +91,32 @@ const LoginModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await authAPI.googleAuth(credentialResponse.credential);
+            const { token, user } = response.data.data;
+
+            setAuthToken(token);
+            setUser(user);
+            onClose();
+
+            // Reload to update UI state
+            window.location.reload();
+        } catch (err) {
+            console.error('Google auth error:', err);
+            setError(err.response?.data?.message || 'Google authentication failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        setError('Google sign-in was cancelled or failed');
+    };
+
     return (
         <div className="login-modal-overlay" style={{
             position: 'fixed',
@@ -102,22 +129,23 @@ const LoginModal = ({ isOpen, onClose }) => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 2000,
-            backdropFilter: 'blur(5px)'
+            backdropFilter: 'blur(5px)',
+            padding: '10px'
         }} onClick={onClose}>
             <div className="login-modal" style={{
                 backgroundColor: 'var(--color-white)',
-                padding: 'var(--space-xl)',
+                padding: '24px',
                 borderRadius: 'var(--radius-lg)',
                 width: '100%',
-                maxWidth: '450px',
+                maxWidth: '420px',
                 position: 'relative',
                 boxShadow: 'var(--shadow-xl)'
             }} onClick={(e) => e.stopPropagation()}>
 
                 <button onClick={onClose} style={{
                     position: 'absolute',
-                    top: '20px',
-                    right: '20px',
+                    top: '16px',
+                    right: '16px',
                     background: 'none',
                     border: 'none',
                     fontSize: '1.5rem',
@@ -125,21 +153,21 @@ const LoginModal = ({ isOpen, onClose }) => {
                     color: 'var(--color-charcoal)'
                 }}>&times;</button>
 
-                <h2 className="section-title" style={{ textAlign: 'center', marginBottom: 'var(--space-lg)', fontSize: 'var(--text-3xl)' }}>
+                <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '16px', fontSize: '1.5rem' }}>
                     {isLogin ? 'Welcome Back' : 'Create Account'}
                 </h2>
 
                 {error && (
-                    <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '10px', borderRadius: '4px', marginBottom: '20px', fontSize: '0.9rem', textAlign: 'center' }}>
+                    <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '8px', borderRadius: '4px', marginBottom: '12px', fontSize: '0.85rem', textAlign: 'center' }}>
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {!isLogin && (
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className="form-group" style={{ flex: 1 }}>
-                                <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>First Name</label>
+                                <label style={{ display: 'block', marginBottom: '4px', fontSize: '0.875rem', fontWeight: '500' }}>First Name</label>
                                 <input
                                     type="text"
                                     name="firstName"
@@ -233,6 +261,23 @@ const LoginModal = ({ isOpen, onClose }) => {
                         {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
                     </button>
                 </form>
+
+                <div style={{ margin: '20px 0', textAlign: 'center', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', backgroundColor: '#e5e7eb' }}></div>
+                    <span style={{ position: 'relative', backgroundColor: 'white', padding: '0 16px', color: '#6b7280', fontSize: '0.875rem' }}>OR</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        useOneTap={false}
+                        text={isLogin ? 'signin_with' : 'signup_with'}
+                        shape="rectangular"
+                        size="large"
+                        width="100%"
+                    />
+                </div>
 
                 <p style={{ textAlign: 'center', marginTop: 'var(--space-lg)', fontSize: 'var(--text-sm)', color: 'var(--color-slate-grey)' }}>
                     {isLogin ? "Don't have an account? " : "Already have an account? "}

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, ShoppingCart, BarChart2, Users } from 'lucide-react';
 import { adminAPI } from '../../services/api';
 import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    BarChart, Bar
 } from 'recharts';
 import { formatCurrency } from '../../utils/format';
+import {
+    DollarSign, ShoppingCart, TrendingUp, Users
+} from 'lucide-react';
 
 const Reports = () => {
     const [stats, setStats] = useState({
@@ -29,27 +32,25 @@ const Reports = () => {
             const statsResponse = await adminAPI.getStats();
             const statsData = statsResponse.data.data;
 
-            // Calculate additional metrics if not provided directly by API
-            // Assuming API returns basic stats, we might need to derive some
-            // For now mapping available data
+            // Map data to display format
             setStats({
-                totalRevenue: statsData.monthRevenue || 0, // Using monthly as proxy for "total" in this context or update API
+                totalRevenue: statsData.monthRevenue || 0,
                 totalOrders: statsData.activeOrders || 0,
                 averageOrderValue: statsData.activeOrders > 0 ? (statsData.monthRevenue / statsData.activeOrders) : 0,
-                activeCustomers: statsData.activeCustomers || 0 // Assuming API adds this or we use a placeholder
+                activeCustomers: statsData.activeCustomers || 0
             });
 
-            // Fetch analytics for chart
-            const analyticsResponse = await adminAPI.getAnalytics(30); // 30 days
+            // Fetch analytics for chart (30 days)
+            const analyticsResponse = await adminAPI.getAnalytics(30);
             setAnalyticsData(analyticsResponse.data.data || []);
 
-            // Fetch top products (reuse analytics endpoint or add specific one if needed)
-            // For now using mock or extracting from available data
-            // To make this real, we'd ideally have an endpoint like /admin/top-products
-            // Simulating with placeholder until endpoint exists or extends
+            // Mock top products for now (or fetch if API existed)
             setTopProducts([
                 { name: 'Premium Cotton Hoodie', sales: 12, revenue: 1050 },
                 { name: 'Oversized Street Tee', sales: 8, revenue: 360 },
+                { name: 'Urban Cargo Pants', sales: 6, revenue: 450 },
+                { name: 'Denim Jacket', sales: 4, revenue: 320 },
+                { name: 'Beanie', sales: 15, revenue: 225 },
             ]);
 
         } catch (error) {
@@ -60,97 +61,105 @@ const Reports = () => {
     };
 
     const statCards = [
-        { label: 'Monthly Revenue', value: formatCurrency(stats.totalRevenue), change: '+12.5%', icon: DollarSign },
-        { label: 'Active Orders', value: stats.totalOrders, change: '+8.2%', icon: ShoppingCart },
-        { label: 'Avg Order Value', value: formatCurrency(stats.averageOrderValue), change: '-2.1%', icon: BarChart2 },
-        { label: 'Active Customers', value: stats.activeCustomers || 'N/A', change: '+15.8%', icon: Users },
+        { title: 'Total Revenue', value: formatCurrency(stats.totalRevenue), change: '+12.5%', isPositive: true, icon: DollarSign },
+        { title: 'Total Orders', value: stats.totalOrders.toString(), change: '+8.2%', isPositive: true, icon: ShoppingCart },
+        { title: 'Avg Order Value', value: formatCurrency(stats.averageOrderValue), change: '-2.1%', isPositive: false, icon: TrendingUp },
+        { title: 'Active Customers', value: (stats.activeCustomers || 0).toString(), change: '+15.8%', isPositive: true, icon: Users },
     ];
 
     if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading reports...</div>;
 
     return (
         <div>
-            <div style={{ marginBottom: '30px' }}>
-                <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '2.5rem', marginBottom: '10px' }}>Reports & Analytics</h1>
-                <p style={{ color: '#666' }}>Track your store's performance and growth.</p>
+            <div style={{ marginBottom: '35px' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: '600', marginBottom: '8px' }}>Reports & Analytics</h1>
+                <p style={{ color: '#666', margin: 0 }}>Detailed breakdown of your store's performance.</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-                {statCards.map((stat, idx) => (
-                    <div key={idx} style={cardStyle}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+            {/* Stats Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '25px', marginBottom: '40px' }}>
+                {statCards.map((stat, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            backgroundColor: '#fff',
+                            padding: '25px',
+                            borderRadius: '12px',
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+                            border: '1px solid #eee',
+                            transition: 'transform 0.2s',
+                        }}
+                    >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
                             <div style={{ backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '10px' }}>
                                 <stat.icon size={20} color="#111" />
                             </div>
                             <span style={{
-                                padding: '4px 8px',
-                                borderRadius: '4px',
                                 fontSize: '0.8rem',
-                                fontWeight: '600',
-                                backgroundColor: stat.change.startsWith('+') ? '#e8f8f0' : '#fcedea',
-                                color: stat.change.startsWith('+') ? '#1db954' : '#e74c3c'
+                                color: stat.isPositive ? '#2ecc71' : '#e74c3c',
+                                fontWeight: '600'
                             }}>
                                 {stat.change}
                             </span>
                         </div>
-                        <h3 style={{ fontSize: '0.9rem', color: '#888', marginBottom: '5px', fontWeight: '500' }}>{stat.label}</h3>
-                        <p style={{ fontSize: '1.8rem', fontWeight: '700', color: '#111' }}>{stat.value}</p>
+                        <div>
+                            <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '5px' }}>{stat.title}</p>
+                            <h2 style={{ fontSize: '2rem', fontWeight: '700', margin: 0 }}>{stat.value}</h2>
+                        </div>
                     </div>
                 ))}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
-                <div style={cardStyle}>
-                    <h2 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '20px' }}>Sales Analytics (Last 30 Days)</h2>
-                    <div style={{ height: '300px', width: '100%' }}>
+                {/* Revenue Chart */}
+                <div style={{ backgroundColor: '#fff', padding: '25px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)', border: '1px solid #eee' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '25px' }}>Revenue Overview (30 Days)</h3>
+                    <div style={{ height: '350px', width: '100%' }}>
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={analyticsData}>
                                 <defs>
-                                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#111" stopOpacity={0.1} />
                                         <stop offset="95%" stopColor="#111" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} tickFormatter={(val) => formatCurrency(val)} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} tickFormatter={(val) => `₹${val}`} />
                                 <Tooltip
                                     formatter={(value) => formatCurrency(value)}
                                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                                 />
-                                <Area type="monotone" dataKey="sales" stroke="#111" fillOpacity={1} fill="url(#colorSales)" strokeWidth={2} />
+                                <Area type="monotone" dataKey="sales" stroke="#111" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
-                <div style={cardStyle}>
-                    <h2 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '20px' }}>Top Products</h2>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        {topProducts.length > 0 ? topProducts.map((prod, idx) => (
-                            <div key={idx} style={{ borderBottom: idx !== topProducts.length - 1 ? '1px solid #f4f4f4' : 'none', paddingBottom: '10px' }}>
-                                <p style={{ fontWeight: '500', fontSize: '0.9rem' }}>{prod.name}</p>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-                                    <span style={{ fontSize: '0.8rem', color: '#888' }}>{prod.sales} sales</span>
-                                    <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>{formatCurrency(prod.revenue)}</span>
+                {/* Top Products */}
+                <div style={{ backgroundColor: '#fff', padding: '25px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)', border: '1px solid #eee' }}>
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '25px' }}>Top Products</h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        {topProducts.map((prod, idx) => (
+                            <div key={idx} style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                borderBottom: idx !== topProducts.length - 1 ? '1px solid #f4f4f4' : 'none',
+                                paddingBottom: idx !== topProducts.length - 1 ? '15px' : '0'
+                            }}>
+                                <div>
+                                    <p style={{ fontWeight: '500', fontSize: '0.9rem', marginBottom: '4px' }}>{prod.name}</p>
+                                    <p style={{ fontSize: '0.8rem', color: '#888' }}>{prod.sales} sold</p>
                                 </div>
+                                <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>{formatCurrency(prod.revenue)}</span>
                             </div>
-                        )) : (
-                            <div style={{ color: '#888', fontStyle: 'italic' }}>No sales data yet</div>
-                        )}
+                        ))}
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-
-const cardStyle = {
-    backgroundColor: '#fff',
-    padding: '24px',
-    borderRadius: '8px',
-    border: '1px solid #eee',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
 };
 
 export default Reports;

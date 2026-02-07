@@ -1,9 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import { ShopContext } from "../context/ShopContext";
 
 const Shop = () => {
-    const { products } = useContext(ShopContext);
+    const { products, fetchProducts } = useContext(ShopContext);
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
     return (
         <section className="section" id="shop">

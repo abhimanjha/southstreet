@@ -1,4 +1,5 @@
 const { Order, OrderItem, Product, User } = require('../models');
+const crypto = require('crypto');
 const { Op } = require('sequelize');
 
 // @desc    Get all orders
@@ -46,13 +47,11 @@ const getOrders = async (req, res, next) => {
 
         res.json({
             success: true,
-            data: {
-                orders: rows,
-                pagination: {
-                    total: count,
-                    page: parseInt(page),
-                    pages: Math.ceil(count / limit)
-                }
+            data: rows,
+            pagination: {
+                total: count,
+                page: parseInt(page),
+                pages: Math.ceil(count / limit)
             }
         });
     } catch (error) {
@@ -100,7 +99,7 @@ const getOrder = async (req, res, next) => {
 
         res.json({
             success: true,
-            data: { order }
+            data: order
         });
     } catch (error) {
         next(error);
@@ -112,7 +111,8 @@ const getOrder = async (req, res, next) => {
 // @access  Private
 const createOrder = async (req, res, next) => {
     try {
-        const { items, shippingAddress, paymentMethod, notes } = req.body;
+        console.log('Request Body:', req.body);
+        const { items, shippingAddress, paymentMethod, notes, paymentResult } = req.body;
 
         // Calculate total amount
         let totalAmount = 0;
@@ -146,19 +146,69 @@ const createOrder = async (req, res, next) => {
                 color: item.color
             });
 
-            // Reduce stock
-            product.stock -= item.quantity;
-            await product.save();
+            // Reduce stock - MOVED to after successful order creation
+            // product.stock -= item.quantity;
+            // await product.save();
+        }
+
+        // Determine Payment Status and Verify Razorpay
+        let paymentStatus = 'pending'; // Default for COD
+        if (paymentMethod === 'Razorpay') {
+            console.log('Verifying Razorpay Payment...');
+            if (!paymentResult || !paymentResult.razorpay_payment_id || !paymentResult.razorpay_order_id || !paymentResult.razorpay_signature) {
+                console.error('Missing Razorpay payment details');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Payment verification failed: Missing payment details'
+                });
+            }
+
+            // Verify Signature
+            const body = paymentResult.razorpay_order_id + "|" + paymentResult.razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac('sha256', process.env.RAZORPAY_SECRET)
+                .update(body.toString())
+                .digest('hex');
+
+            console.log('Signatures:', { expected: expectedSignature, received: paymentResult.razorpay_signature });
+
+            if (expectedSignature === paymentResult.razorpay_signature) {
+                paymentStatus = 'paid';
+                console.log('Payment Verified Successfully');
+            } else {
+                console.error('Invalid Razorpay Signature');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Payment verification failed: Invalid signature'
+                });
+            }
         }
 
         // Create order
-        const order = await Order.create({
+        const orderData = {
             userId: req.user.id,
             totalAmount,
             shippingAddress,
             paymentMethod,
-            notes
-        });
+            paymentStatus,
+            notes: notes || ''
+        };
+        console.log('Creating Order with data:', JSON.stringify(orderData, null, 2));
+
+        let order;
+        try {
+            order = await Order.create(orderData);
+        } catch (createError) {
+            console.error('Sequelize Create Error:', createError);
+            if (createError.name === 'SequelizeValidationError') {
+                const messages = createError.errors.map(e => `${e.path}: ${e.message}`).join(', ');
+                return res.status(400).json({
+                    success: false,
+                    message: `Validation Error: ${messages}`
+                });
+            }
+            throw createError;
+        }
 
         // Create order items
         for (const item of orderItems) {
@@ -166,7 +216,16 @@ const createOrder = async (req, res, next) => {
                 orderId: order.id,
                 ...item
             });
+
+            // Reduce stock (Moved here to ensure integrity)
+            const product = await Product.findByPk(item.productId);
+            if (product) {
+                product.stock -= item.quantity;
+                await product.save();
+            }
         }
+
+        console.log('Order created successfully:', order.id);
 
         // Fetch complete order with items
         const completeOrder = await Order.findByPk(order.id, {
@@ -183,7 +242,7 @@ const createOrder = async (req, res, next) => {
         res.status(201).json({
             success: true,
             message: 'Order created successfully',
-            data: { order: completeOrder }
+            data: completeOrder
         });
     } catch (error) {
         next(error);

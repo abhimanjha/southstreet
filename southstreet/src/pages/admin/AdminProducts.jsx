@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Edit2, Trash2, Plus } from 'lucide-react';
 import { productsAPI } from '../../services/api';
 import { formatCurrency } from '../../utils/format';
+import { getImageUrl } from '../../utils/imageUrl';
 
 const AdminProducts = () => {
     const navigate = useNavigate();
@@ -117,7 +118,7 @@ const AdminProducts = () => {
                                     <td style={{ padding: '16px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                             <img
-                                                src={image}
+                                                src={getImageUrl(image)}
                                                 alt={product.name}
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }}
                                             />

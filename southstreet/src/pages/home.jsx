@@ -7,8 +7,13 @@ import CategoryCard from "../components/CategoryCard";
 
 
 function Home() {
-  const { products } = useContext(ShopContext);
+  const { products, fetchProducts } = useContext(ShopContext);
   const parallaxRef = useRef(null);
+
+  // Refresh products on mount
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   // Scroll animation observer
   useEffect(() => {
@@ -80,15 +85,21 @@ function Home() {
           </p>
         </div>
         <div className="product-grid animate-on-scroll">
-          {products.slice(0, 6).map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              image={product.image}
-              name={product.name}
-              price={product.price}
-            />
-          ))}
+          {products.slice(0, 6).map((product) => {
+            const image = product.images && product.images.length > 0
+              ? product.images[0]
+              : 'https://via.placeholder.com/300';
+
+            return (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                image={image}
+                name={product.name}
+                price={product.price}
+              />
+            );
+          })}
         </div>
       </section>
 

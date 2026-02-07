@@ -134,7 +134,10 @@ const AddProduct = () => {
             navigate('/admin/products');
         } catch (error) {
             console.error('Error saving product:', error);
-            alert(error.response?.data?.message || 'Failed to save product');
+            const errorMessage = error.response?.data?.errors
+                ? error.response.data.errors.map(e => e.msg).join('\n')
+                : (error.response?.data?.message || 'Failed to save product');
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }

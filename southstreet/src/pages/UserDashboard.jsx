@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getUser, logout, isAuthenticated, setUser } from '../utils/auth';
-import { authAPI } from '../services/api';
+import { authAPI, ordersAPI } from '../services/api';
+import { formatCurrency } from '../utils/format';
+import { getImageUrl } from '../utils/imageUrl';
 
 const UserDashboard = () => {
     const navigate = useNavigate();
     const [user, setUserData] = useState(null);
+    const [orders, setOrders] = useState([]);
+    const [loadingOrders, setLoadingOrders] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({
         firstName: '',
@@ -28,6 +32,24 @@ const UserDashboard = () => {
                 phone: userData.phone || ''
             });
         }
+
+        // Fetch user orders
+        const fetchOrders = async () => {
+            try {
+                const response = await ordersAPI.getAll();
+                if (response.data.success) {
+                    // Get only the most recent 5 orders
+                    const userOrders = response.data.data.slice(0, 5);
+                    setOrders(userOrders);
+                }
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            } finally {
+                setLoadingOrders(false);
+            }
+        };
+
+        fetchOrders();
     }, [navigate]);
 
     const handleLogout = () => {
@@ -187,13 +209,134 @@ const UserDashboard = () => {
                         )}
                     </div>
 
-                    {/* Placeholder for future Orders section */}
+                    {/* Recent Orders section */}
                     <div className="dashboard-card">
                         <h3 style={{ fontSize: '18px', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>Recent Orders</h3>
-                        <p style={{ color: 'var(--color-slate-grey)', fontStyle: 'italic' }}>No orders found.</p>
-                        <button className="btn-secondary" style={{ marginTop: '15px' }} onClick={() => navigate('/shop')}>
-                            Start Shopping
-                        </button>
+                        {loadingOrders ? (
+                            <p style={{ color: 'var(--color-slate-grey)', fontStyle: 'italic' }}>Loading orders...</p>
+                        ) : orders.length > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                {orders.map((order) => (
+                                    <div key={order.id} style={{
+                                        padding: '15px',
+                                        border: '1px solid #e5e7eb',
+                                        borderRadius: '8px',
+                                        backgroundColor: 'white'
+                                    }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '10px' }}>
+                                            <div>
+                                                <p style={{ fontWeight: '600', fontSize: '0.95rem', marginBottom: '5px' }}>
+                                                    Order #{order.orderNumber}
+                                                </p>
+                                                <p style={{ fontSize: '0.85rem', color: '#666' }}>
+                                                    {new Date(order.createdAt).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </p>
+                                            </div>
+                                            <span style={{
+                                                padding: '4px 12px',
+                                                borderRadius: '12px',
+                                                fontSize: '0.8rem',
+                                                fontWeight: '600',
+                                                backgroundColor:
+                                                    order.status === 'delivered' ? '#d1fae5' :
+                                                        order.status === 'shipped' ? '#dbeafe' :
+                                                            order.status === 'processing' ? '#fef3c7' :
+                                                                order.status === 'cancelled' ? '#fee2e2' :
+                                                                    '#f3f4f6',
+                                                color:
+                                                    order.status === 'delivered' ? '#065f46' :
+                                                        order.status === 'shipped' ? '#1e40af' :
+                                                            order.status === 'processing' ? '#92400e' :
+                                                                order.status === 'cancelled' ? '#991b1b' :
+                                                                    '#374151'
+                                            }}>
+                                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                            </span>
+                                        </div>
+
+                                        {/* Order Items Preview */}
+                                        {order.items && order.items.length > 0 && (
+                                            <div style={{
+                                                display: 'flex',
+                                                gap: '8px',
+                                                marginBottom: '10px',
+                                                flexWrap: 'wrap'
+                                            }}>
+                                                {order.items.slice(0, 3).map((item, idx) => {
+                                                    const product = item.product || {};
+                                                    const image = product.images && product.images.length > 0
+                                                        ? product.images[0]
+                                                        : 'https://via.placeholder.com/50';
+
+                                                    return (
+                                                        <img
+                                                            key={idx}
+                                                            src={getImageUrl(image)}
+                                                            alt={product.name}
+                                                            style={{
+                                                                width: '50px',
+                                                                height: '50px',
+                                                                objectFit: 'cover',
+                                                                borderRadius: '6px',
+                                                                border: '1px solid #e5e7eb'
+                                                            }}
+                                                        />
+                                                    );
+                                                })}
+                                                {order.items.length > 3 && (
+                                                    <div style={{
+                                                        width: '50px',
+                                                        height: '50px',
+                                                        borderRadius: '6px',
+                                                        backgroundColor: '#f3f4f6',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontSize: '0.85rem',
+                                                        color: '#666',
+                                                        fontWeight: '600'
+                                                    }}>
+                                                        +{order.items.length - 3}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <p style={{ fontWeight: '700', fontSize: '1rem' }}>
+                                                {formatCurrency(order.totalAmount)}
+                                            </p>
+                                            <Link to={`/order-confirmation/${order.id}`}>
+                                                <button style={{
+                                                    padding: '6px 16px',
+                                                    backgroundColor: 'transparent',
+                                                    color: '#111',
+                                                    border: '1px solid #111',
+                                                    borderRadius: '6px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '600',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease'
+                                                }}>
+                                                    View Details
+                                                </button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <>
+                                <p style={{ color: 'var(--color-slate-grey)', fontStyle: 'italic' }}>No orders found.</p>
+                                <button className="btn-secondary" style={{ marginTop: '15px' }} onClick={() => navigate('/shop')}>
+                                    Start Shopping
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 

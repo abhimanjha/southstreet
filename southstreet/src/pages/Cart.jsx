@@ -3,6 +3,7 @@ import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { formatCurrency } from '../utils/format';
+import { getImageUrl } from '../utils/imageUrl';
 
 const Cart = () => {
     const { getCartItems, removeFromCart, updateCartItemQuantity, getCartTotal, loading } = useContext(ShopContext);
@@ -56,7 +57,7 @@ const Cart = () => {
                                 paddingBottom: '20px'
                             }}>
                                 <img
-                                    src={image}
+                                    src={getImageUrl(image)}
                                     alt={product.name}
                                     style={{
                                         width: '100px',

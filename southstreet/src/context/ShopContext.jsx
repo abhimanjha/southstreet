@@ -10,6 +10,7 @@ export const ShopContextProvider = (props) => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Initialize session ID for guest users
     useEffect(() => {
@@ -157,7 +158,9 @@ export const ShopContextProvider = (props) => {
         getCartItemsCount,
         getCartTotal,
         getCartItems,
-        refreshCart: fetchCart
+        refreshCart: fetchCart,
+        searchQuery,
+        setSearchQuery
     };
 
     return (

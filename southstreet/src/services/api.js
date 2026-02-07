@@ -53,6 +53,7 @@ export const authAPI = {
     register: (data) => api.post('/auth/register', data),
     login: (data) => api.post('/auth/login', data),
     adminLogin: (data) => api.post('/auth/admin/login', data),
+    googleAuth: (credential) => api.post('/auth/google', { credential }),
     getProfile: () => api.get('/auth/me'),
     updateProfile: (data) => api.put('/auth/profile', data)
 };

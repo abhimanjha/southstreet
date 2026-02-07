@@ -43,7 +43,7 @@ const AdminDashboard = () => {
 
             // Fetch recent orders
             const ordersResponse = await ordersAPI.getAll({ page: 1, limit: 5 });
-            setRecentOrders(ordersResponse.data.data.orders || []);
+            setRecentOrders(ordersResponse.data.data || []);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
         } finally {

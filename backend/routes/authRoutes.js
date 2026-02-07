@@ -8,6 +8,7 @@ const {
     getMe,
     updateProfile
 } = require('../controllers/authController');
+const { googleAuth } = require('../controllers/googleAuthController');
 const {
     registerValidation,
     loginValidation
@@ -16,6 +17,7 @@ const {
 router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
 router.post('/admin/login', loginValidation, adminLogin);
+router.post('/google', googleAuth);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
 
