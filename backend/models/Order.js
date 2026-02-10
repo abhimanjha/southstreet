@@ -21,7 +21,7 @@ const Order = sequelize.define('Order', {
         }
     },
     status: {
-        type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
+        type: DataTypes.ENUM('pending', 'confirm', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'),
         defaultValue: 'pending'
     },
     totalAmount: {
@@ -45,6 +45,10 @@ const Order = sequelize.define('Order', {
     },
     notes: {
         type: DataTypes.TEXT,
+        allowNull: true
+    },
+    deliveryOTP: {
+        type: DataTypes.STRING(6),
         allowNull: true
     }
 }, {

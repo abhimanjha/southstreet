@@ -49,15 +49,26 @@ const OrderDetail = () => {
 
     const handleStatusChange = async (newStatus) => {
         try {
+            let otp = null;
+            if (newStatus === 'delivered') {
+                otp = window.prompt('Please enter the 6-digit Delivery OTP provided by the customer:');
+                if (!otp) {
+                    alert('OTP is required to mark order as Delivered');
+                    return;
+                }
+            }
+
             setUpdating(true);
-            const response = await ordersAPI.updateStatus(id, newStatus);
+            const response = await ordersAPI.updateStatus(id, newStatus, otp);
             if (response.data.success) {
                 // Refresh order data
                 fetchOrder();
             }
         } catch (err) {
             console.error('Error updating status:', err);
-            alert('Failed to update status');
+            // Show specific error message from backend if available
+            const errorMsg = err.response?.data?.message || 'Failed to update status';
+            alert(errorMsg);
         } finally {
             setUpdating(false);
         }
@@ -149,6 +160,7 @@ const OrderDetail = () => {
                             <option value="pending">Pending</option>
                             <option value="processing">Processing</option>
                             <option value="shipped">Shipped</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
                             <option value="delivered">Delivered</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
@@ -245,7 +257,7 @@ const OrderDetail = () => {
                                 />
                             )}
 
-                            {(order.status === 'shipped' || order.status === 'delivered') && (
+                            {(order.status === 'shipped' || order.status === 'out_for_delivery' || order.status === 'delivered') && (
                                 <TimelineItem
                                     icon={Truck}
                                     title="Shipped"
@@ -253,6 +265,18 @@ const OrderDetail = () => {
                                     description="Order is on the way"
                                     isLast={order.status === 'shipped'}
                                     color="#f39c12"
+                                    active={true}
+                                />
+                            )}
+
+                            {(order.status === 'out_for_delivery' || order.status === 'delivered') && (
+                                <TimelineItem
+                                    icon={Truck}
+                                    title="Out for Delivery"
+                                    date=""
+                                    description="Order is out for delivery"
+                                    isLast={order.status === 'out_for_delivery'}
+                                    color="#e67e22"
                                     active={true}
                                 />
                             )}

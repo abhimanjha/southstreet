@@ -1,5 +1,6 @@
 // Authentication helper functions
 
+// Regular User Token
 export const setAuthToken = (token) => {
     localStorage.setItem('token', token);
 };
@@ -10,6 +11,29 @@ export const getAuthToken = () => {
 
 export const removeAuthToken = () => {
     localStorage.removeItem('token');
+};
+
+// Admin Token
+export const setAdminToken = (token) => {
+    localStorage.setItem('adminToken', token);
+};
+
+export const getAdminToken = () => {
+    return localStorage.getItem('adminToken');
+};
+
+export const removeAdminToken = () => {
+    localStorage.removeItem('adminToken');
+};
+
+// Smart Token Retrieval based on context
+export const getToken = () => {
+    // If we are in admin section, prefer admin token
+    if (window.location.pathname.startsWith('/admin')) {
+        return getAdminToken() || getAuthToken();
+    }
+    // Otherwise prefer user token
+    return getAuthToken();
 };
 
 export const setUser = (user) => {
@@ -29,14 +53,38 @@ export const isAuthenticated = () => {
     return !!getAuthToken();
 };
 
+export const isAdminAuthenticated = () => {
+    return !!getAdminToken();
+};
+
 export const isAdmin = () => {
+    // Check if we have an admin token first
+    if (getAdminToken()) return true;
+
+    // Fallback to checking user role in localStorage (legacy/simple check)
     const user = getUser();
     return user?.role === 'admin';
 };
 
 export const logout = () => {
+    // If in admin section, only logout admin
+    if (window.location.pathname.startsWith('/admin')) {
+        removeAdminToken();
+        // Redirect to admin login
+        window.location.href = '/admin/login';
+    } else {
+        // User logout
+        removeAuthToken();
+        removeUser();
+        // Redirect to home
+        window.location.href = '/';
+    }
+};
+
+export const logoutAll = () => {
     removeAuthToken();
     removeUser();
+    removeAdminToken();
     window.location.href = '/';
 };
 

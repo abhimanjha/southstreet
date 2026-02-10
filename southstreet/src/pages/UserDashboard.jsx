@@ -36,7 +36,9 @@ const UserDashboard = () => {
         // Fetch user orders
         const fetchOrders = async () => {
             try {
-                const response = await ordersAPI.getAll();
+                // Request 'me' scope to ensure we only get the current user's orders,
+                // even if the user happens to have admin privileges.
+                const response = await ordersAPI.getAll({ scope: 'me' });
                 if (response.data.success) {
                     // Get only the most recent 5 orders
                     const userOrders = response.data.data.slice(0, 5);

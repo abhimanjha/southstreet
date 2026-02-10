@@ -4,6 +4,7 @@ import { ordersAPI } from '../services/api';
 import { formatCurrency } from '../utils/format';
 import { getImageUrl } from '../utils/imageUrl';
 import { Package, CheckCircle, Truck, MapPin } from 'lucide-react';
+import OrderTracker from '../components/OrderTracker';
 
 const OrderConfirmation = () => {
     const { orderId } = useParams();
@@ -118,25 +119,8 @@ const OrderConfirmation = () => {
                 </div>
 
                 {/* Order Status Timeline */}
-                <div style={{
-                    backgroundColor: 'white',
-                    borderRadius: '12px',
-                    padding: '30px',
-                    marginBottom: '30px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                }}>
-                    <h2 style={{ fontSize: '1.3rem', marginBottom: '25px', color: '#111' }}>
-                        Order Status
-                    </h2>
-                    <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <StatusStep icon={<CheckCircle size={24} />} label="Order Placed" active={true} />
-                        <div style={{ flex: '1', height: '2px', backgroundColor: '#e5e7eb', minWidth: '40px' }} />
-                        <StatusStep icon={<Package size={24} />} label="Processing" active={order.status !== 'pending'} />
-                        <div style={{ flex: '1', height: '2px', backgroundColor: '#e5e7eb', minWidth: '40px' }} />
-                        <StatusStep icon={<Truck size={24} />} label="Shipped" active={order.status === 'shipped' || order.status === 'delivered'} />
-                        <div style={{ flex: '1', height: '2px', backgroundColor: '#e5e7eb', minWidth: '40px' }} />
-                        <StatusStep icon={<MapPin size={24} />} label="Delivered" active={order.status === 'delivered'} />
-                    </div>
+                <div style={{ marginBottom: '30px' }}>
+                    <OrderTracker orderId={orderId} initialOrder={order} />
                 </div>
 
                 {/* Order Items */}

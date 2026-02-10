@@ -13,7 +13,8 @@ const getOrders = async (req, res, next) => {
         const where = {};
 
         // If not admin, only show user's own orders
-        if (req.user.role !== 'admin') {
+        // OR if scope='me' is requested (for admins viewing their own dashboard)
+        if (req.user.role !== 'admin' || req.query.scope === 'me') {
             where.userId = req.user.id;
         }
 
@@ -254,7 +255,7 @@ const createOrder = async (req, res, next) => {
 // @access  Private/Admin
 const updateOrderStatus = async (req, res, next) => {
     try {
-        const { status } = req.body;
+        const { status, otp } = req.body;
 
         const order = await Order.findByPk(req.params.id);
 
@@ -265,7 +266,40 @@ const updateOrderStatus = async (req, res, next) => {
             });
         }
 
+        // OTP Generation logic
+        if (status === 'out_for_delivery' && !order.deliveryOTP) {
+            // Generate 6 digit OTP
+            const generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            order.deliveryOTP = generatedOTP;
+        }
+
+        // OTP Verification logic
+        if (status === 'delivered') {
+            // If we have an OTP set, verification is required
+            if (order.deliveryOTP) {
+                if (!otp) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Delivery OTP is required to complete this order'
+                    });
+                }
+
+                if (otp !== order.deliveryOTP) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Invalid Delivery OTP'
+                    });
+                }
+            }
+        }
+
         order.status = status;
+
+        // If order is delivered and payment method is COD, mark as paid
+        if (status === 'delivered' && order.paymentMethod === 'COD' && order.paymentStatus === 'pending') {
+            order.paymentStatus = 'paid';
+        }
+
         await order.save();
 
         res.json({

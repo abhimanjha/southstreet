@@ -13,7 +13,23 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        // Determine which token to use based on the request URL or current page
+        let token;
+
+        // If the request is specifically for admin routes, try admin token first
+        // Or if the current page is an admin page
+        const isAdminRequest = config.url.includes('/admin') || window.location.pathname.startsWith('/admin');
+        const isOrderUpdate = config.url.includes('/orders') && config.method !== 'get';
+
+        if (isAdminRequest || (isOrderUpdate && localStorage.getItem('adminToken'))) {
+            token = localStorage.getItem('adminToken');
+        }
+
+        // Fallback or explicit user request
+        if (!token) {
+            token = localStorage.getItem('token');
+        }
+
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -86,7 +102,7 @@ export const ordersAPI = {
     getAll: (params) => api.get('/orders', { params }),
     getById: (id) => api.get(`/orders/${id}`),
     create: (data) => api.post('/orders', data),
-    updateStatus: (id, status) => api.put(`/orders/${id}/status`, { status }),
+    updateStatus: (id, status, otp) => api.put(`/orders/${id}/status`, { status, otp }),
     cancel: (id) => api.delete(`/orders/${id}`),
     getStats: () => api.get('/orders/stats')
 };

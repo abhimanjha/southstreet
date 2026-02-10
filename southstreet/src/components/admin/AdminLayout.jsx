@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { logout } from '../../utils/auth';
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -41,6 +42,15 @@ const AdminLayout = () => {
         { id: 2, text: 'Product "Silk Blend Dress" is out of stock', time: '1 hour ago', type: 'stock' },
         { id: 3, text: 'Payment failed for Order #ORD-7815', time: '3 hours ago', type: 'payment' },
     ];
+
+    const [adminUser, setAdminUser] = useState(() => {
+        const userStr = localStorage.getItem('adminUser');
+        return userStr ? JSON.parse(userStr) : { firstName: 'Admin', lastName: 'User', email: 'admin@southstreet.com' };
+    });
+
+    const handleLogout = () => {
+        logout(); // This handles redirection to /admin/login because we are in /admin/*
+    };
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
@@ -105,7 +115,7 @@ const AdminLayout = () => {
 
                 <div style={{ padding: '20px', borderTop: '1px solid #222' }}>
                     <button
-                        onClick={() => navigate('/admin/login')}
+                        onClick={handleLogout}
                         style={{
                             width: '100%',
                             display: 'flex',
@@ -225,11 +235,12 @@ const AdminLayout = () => {
                                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                             >
                                 <div style={{ width: '35px', height: '35px', borderRadius: '50%', backgroundColor: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.9rem', fontWeight: 600 }}>
-                                    AD
+                                    {adminUser.firstName ? adminUser.firstName.charAt(0).toUpperCase() : 'A'}
+                                    {adminUser.lastName ? adminUser.lastName.charAt(0).toUpperCase() : 'U'}
                                 </div>
                                 <div style={{ textAlign: 'left' }}>
                                     <p style={{ fontSize: '0.85rem', fontWeight: 600, margin: 0, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        Admin User <ChevronDown size={14} />
+                                        {adminUser.firstName} {adminUser.lastName} <ChevronDown size={14} />
                                     </p>
                                     <p style={{ fontSize: '0.75rem', color: '#999', margin: 0 }}>Administrator</p>
                                 </div>
@@ -253,7 +264,7 @@ const AdminLayout = () => {
                                     <Link to="/admin/change-password" style={profileLinkStyle}><LogOut size={16} /> Change Password</Link>
                                     <Link to="/admin/settings" style={profileLinkStyle}><Settings size={16} /> Settings</Link>
                                     <div style={{ borderTop: '1px solid #eee', margin: '8px 0' }}></div>
-                                    <button onClick={() => navigate('/admin/login')} style={{ ...profileLinkStyle, width: '100%', color: '#e74c3c', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer' }}><LogOut size={16} /> Logout</button>
+                                    <button onClick={handleLogout} style={{ ...profileLinkStyle, width: '100%', color: '#e74c3c', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer' }}><LogOut size={16} /> Logout</button>
                                 </div>
                             )}
                         </div>

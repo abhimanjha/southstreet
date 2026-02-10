@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../../services/api';
-import { setAuthToken, setUser } from '../../utils/auth';
+import { setAdminToken } from '../../utils/auth';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
@@ -29,8 +29,12 @@ const AdminLogin = () => {
                 throw new Error('Unauthorized: Access denied');
             }
 
-            setAuthToken(token);
-            setUser(user);
+            setAdminToken(token);
+            // We can still set user info in localStorage if needed for display, 
+            // ensuring it doesn't overwrite the main 'user' key if we want strict separation,
+            // but for now, 'user' key is used for display. 
+            // Actually, let's use a separate key for admin user info too to be safe.
+            localStorage.setItem('adminUser', JSON.stringify(user));
 
             navigate('/admin');
         } catch (err) {
