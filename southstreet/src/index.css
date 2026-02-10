@@ -1,6 +1,3 @@
-/* Google Fonts - Luxury Fashion Typography */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700&display=swap');
-
 /* CSS Custom Properties - Luxury Color Palette */
 :root {
   /* Colors - Premium Fashion Palette */
@@ -18,8 +15,8 @@
   --color-gold-muted: #B8A070;
 
   /* Typography */
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Font Sizes - Editorial Scale */
   --text-xs: 0.75rem;
