@@ -1369,3 +1369,160 @@
     padding: var(--space-xl);
   }
 }
+
+/* Profile Modal */
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  backdrop-filter: blur(2px);
+}
+
+.profile-modal-content {
+  background-color: white;
+  width: 100%;
+  max-width: 480px;
+  padding: 40px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.3s ease-out;
+}
+
+.profile-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.profile-modal-close:hover {
+  background-color: #f5f5f5;
+}
+
+.profile-modal-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-modal-header h2 {
+  font-size: 24px;
+  font-weight: 500;
+  /* Nike style is often clean sans-serif */
+  margin-top: 16px;
+  letter-spacing: -0.5px;
+}
+
+.profile-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-input-group {
+  position: relative;
+}
+
+.profile-input-group input,
+.profile-input-group select {
+  width: 100%;
+  padding: 16px 12px 6px;
+  /* Top padding for floating label space */
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  background-color: transparent;
+  height: 56px;
+  /* Fixed height for consistency */
+}
+
+.profile-input-group input:focus,
+.profile-input-group select:focus {
+  border-color: #111;
+}
+
+.profile-input-group label {
+  position: absolute;
+  top: 18px;
+  /* Centered visually when input empty */
+  left: 12px;
+  font-size: 16px;
+  color: #757575;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Float label when focused or has value */
+.profile-input-group input:focus+label,
+.profile-input-group input:not(:placeholder-shown)+label,
+.profile-input-group select:focus+label,
+.select-label {
+  /* Always float for select since it usually has a value */
+  top: 6px;
+  font-size: 12px;
+  color: #757575;
+}
+
+.profile-update-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: #e5e5e5;
+  color: #757575;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: not-allowed;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.profile-update-btn:not(:disabled) {
+  background-color: #111;
+  color: white;
+  cursor: pointer;
+}
+
+.profile-update-btn:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.readonly-input {
+  background-color: #f9f9f9 !important;
+  cursor: default;
+}
+
+.profile-message {
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.profile-message.success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.profile-message.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}

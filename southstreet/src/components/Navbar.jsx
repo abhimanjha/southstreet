@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import { isAuthenticated, getUser, logout } from '../utils/auth';
 import LoginModal from './LoginModal';
+import ProfileModal from './ProfileModal';
 import { Search, Heart, ShoppingBag, Menu, X, User, Package, LogOut } from 'lucide-react';
 import '../App.css'; // Ensure CSS is applied
 
@@ -11,6 +12,7 @@ export default function Navbar() {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
     const { getCartItemsCount } = useContext(ShopContext);
     const totalItems = getCartItemsCount();
     const location = useLocation();
@@ -67,7 +69,6 @@ export default function Navbar() {
                                 <span>Hi, <strong>{user.firstName || 'User'}</strong></span>
                                 <User size={16} className="user-icon-small" />
                             </div>
-
                             {showUserMenu && (
                                 <div className="user-dropdown">
                                     <div className="user-dropdown-header">
@@ -78,7 +79,7 @@ export default function Navbar() {
                                             <span>Orders</span>
                                             <Package size={18} />
                                         </div>
-                                        <div className="user-dropdown-item" onClick={() => { navigate('/account'); setShowUserMenu(false); }}>
+                                        <div className="user-dropdown-item" onClick={() => { setShowUserMenu(false); setShowProfileModal(true); }}>
                                             <span>My Profile</span>
                                             <User size={18} />
                                         </div>
@@ -142,6 +143,11 @@ export default function Navbar() {
                 </div>
             </nav>
             <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+            <ProfileModal
+                isOpen={showProfileModal}
+                onClose={() => setShowProfileModal(false)}
+                user={user}
+            />
         </>
     );
 }
