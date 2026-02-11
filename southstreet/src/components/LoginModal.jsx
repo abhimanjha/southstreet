@@ -124,150 +124,203 @@ const LoginModal = ({ isOpen, onClose }) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 2000,
-            backdropFilter: 'blur(5px)',
-            padding: '10px'
+            backdropFilter: 'blur(8px)',
+            padding: '20px'
         }} onClick={onClose}>
             <div className="login-modal" style={{
-                backgroundColor: 'var(--color-white)',
-                padding: '24px',
-                borderRadius: 'var(--radius-lg)',
+                backgroundColor: '#ffffff',
+                padding: '48px 40px',
+                borderRadius: '24px',
                 width: '100%',
-                maxWidth: '420px',
+                maxWidth: '450px',
                 position: 'relative',
-                boxShadow: 'var(--shadow-xl)'
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                animation: 'slideIn 0.3s ease-out'
             }} onClick={(e) => e.stopPropagation()}>
 
                 <button onClick={onClose} style={{
                     position: 'absolute',
-                    top: '16px',
-                    right: '16px',
+                    top: '20px',
+                    right: '20px',
                     background: 'none',
                     border: 'none',
-                    fontSize: '1.5rem',
+                    fontSize: '28px',
                     cursor: 'pointer',
-                    color: 'var(--color-charcoal)'
-                }}>&times;</button>
+                    color: '#111',
+                    lineHeight: '1',
+                    padding: '4px 8px',
+                    transition: 'opacity 0.2s'
+                }} onMouseEnter={(e) => e.target.style.opacity = '0.6'} onMouseLeave={(e) => e.target.style.opacity = '1'}>&times;</button>
 
-                <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '16px', fontSize: '1.5rem' }}>
-                    {isLogin ? 'Welcome Back' : 'Create Account'}
+                {/* Logo/Brand Area */}
+                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ margin: '0 auto' }}>
+                        <path d="M30 0L60 15V45L30 60L0 45V15L30 0Z" fill="#111" />
+                        <text x="30" y="38" fontSize="24" fill="white" textAnchor="middle" fontWeight="bold">SS</text>
+                    </svg>
+                </div>
+
+                <h2 style={{
+                    textAlign: 'center',
+                    marginBottom: '8px',
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: '#111',
+                    letterSpacing: '-0.5px'
+                }}>
+                    {isLogin ? 'Log in to your account' : 'Create your account'}
                 </h2>
 
+                <p style={{
+                    textAlign: 'center',
+                    marginBottom: '32px',
+                    fontSize: '15px',
+                    color: '#757575',
+                    lineHeight: '1.5'
+                }}>
+                    {isLogin ? 'Get personalised picks & faster checkout' : 'Join us for exclusive access & benefits'}
+                </p>
+
                 {error && (
-                    <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '8px', borderRadius: '4px', marginBottom: '12px', fontSize: '0.85rem', textAlign: 'center' }}>
+                    <div style={{
+                        backgroundColor: '#fee2e2',
+                        color: '#dc2626',
+                        padding: '12px 16px',
+                        borderRadius: '8px',
+                        marginBottom: '20px',
+                        fontSize: '14px',
+                        textAlign: 'center',
+                        border: '1px solid #fecaca'
+                    }}>
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {!isLogin && (
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', gap: '12px' }}>
                             <div className="form-group" style={{ flex: 1 }}>
-                                <label style={{ display: 'block', marginBottom: '4px', fontSize: '0.875rem', fontWeight: '500' }}>First Name</label>
                                 <input
                                     type="text"
                                     name="firstName"
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     style={inputStyle}
-                                    placeholder="First"
+                                    placeholder="First Name"
                                     required={!isLogin}
                                 />
                             </div>
                             <div className="form-group" style={{ flex: 1 }}>
-                                <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>Last Name</label>
                                 <input
                                     type="text"
                                     name="lastName"
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     style={inputStyle}
-                                    placeholder="Last"
+                                    placeholder="Last Name"
                                     required={!isLogin}
                                 />
                             </div>
                         </div>
                     )}
                     <div className="form-group">
-                        <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>Email Address</label>
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             style={inputStyle}
-                            placeholder="Enter your email"
+                            placeholder="Email address"
                             required
                         />
                     </div>
                     {!isLogin && (
                         <div className="form-group">
-                            <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>Phone Number</label>
                             <input
                                 type="tel"
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleChange}
                                 style={inputStyle}
-                                placeholder="Enter your phone number"
+                                placeholder="Phone number"
                             />
                         </div>
                     )}
                     <div className="form-group">
-                        <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>Password</label>
                         <input
                             type="password"
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
                             style={inputStyle}
-                            placeholder="Enter your password"
+                            placeholder="Password"
                             required
                         />
                     </div>
 
                     {!isLogin && (
                         <div className="form-group">
-                            <label style={{ display: 'block', marginBottom: '8px', fontSize: 'var(--text-sm)', fontWeight: '500' }}>Confirm Password</label>
                             <input
                                 type="password"
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                                 style={inputStyle}
-                                placeholder="Confirm password"
+                                placeholder="Confirm Password"
                                 required={!isLogin}
                             />
                         </div>
                     )}
 
+                    {!isLogin && (
+                        <p style={{
+                            fontSize: '12px',
+                            color: '#8D8D8D',
+                            lineHeight: '1.6',
+                            margin: '0'
+                        }}>
+                            By entering this site, you agree to the{' '}
+                            <a href="/terms" style={{ color: '#111', textDecoration: 'underline' }}>Terms & Conditions</a>
+                            {' '}and{' '}
+                            <a href="/privacy" style={{ color: '#111', textDecoration: 'underline' }}>Privacy Policy</a>
+                        </p>
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn-primary"
                         style={{
                             width: '100%',
-                            marginTop: 'var(--space-sm)',
-                            backgroundColor: 'var(--color-black)',
-                            color: 'var(--color-white)',
-                            opacity: loading ? 0.7 : 1,
-                            cursor: loading ? 'not-allowed' : 'pointer'
+                            padding: '16px',
+                            marginTop: '8px',
+                            backgroundColor: loading ? '#CCCCCC' : '#111',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '15px',
+                            fontWeight: '600',
+                            cursor: loading ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.2s',
+                            letterSpacing: '0.5px'
                         }}
+                        onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#333')}
+                        onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#111')}
                     >
                         {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
                     </button>
                 </form>
 
-                <div style={{ margin: '20px 0', textAlign: 'center', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', backgroundColor: '#e5e7eb' }}></div>
-                    <span style={{ position: 'relative', backgroundColor: 'white', padding: '0 16px', color: '#6b7280', fontSize: '0.875rem' }}>OR</span>
+                <div style={{ margin: '28px 0', textAlign: 'center', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', backgroundColor: '#E5E5E5' }}></div>
+                    <span style={{ position: 'relative', backgroundColor: 'white', padding: '0 20px', color: '#8D8D8D', fontSize: '14px', fontWeight: '500' }}>OR</span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
                         onError={handleGoogleError}
@@ -279,16 +332,29 @@ const LoginModal = ({ isOpen, onClose }) => {
                     />
                 </div>
 
-                <p style={{ textAlign: 'center', marginTop: 'var(--space-lg)', fontSize: 'var(--text-sm)', color: 'var(--color-slate-grey)' }}>
-                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                <p style={{
+                    textAlign: 'center',
+                    fontSize: '14px',
+                    color: '#8D8D8D',
+                    margin: '0'
+                }}>
+                    {isLogin ? "Not a member? " : "Already a member? "}
                     <span
                         onClick={() => {
                             setIsLogin(!isLogin);
                             setError('');
                         }}
-                        style={{ cursor: 'pointer', textDecoration: 'underline', fontWeight: '600', color: 'var(--color-black)' }}
+                        style={{
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            fontWeight: '600',
+                            color: '#111',
+                            transition: 'opacity 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                        onMouseLeave={(e) => e.target.style.opacity = '1'}
                     >
-                        {isLogin ? 'Register' : 'Login'}
+                        {isLogin ? 'Join us' : 'Sign in'}
                     </span>
                 </p>
             </div>
@@ -298,12 +364,14 @@ const LoginModal = ({ isOpen, onClose }) => {
 
 const inputStyle = {
     width: '100%',
-    padding: '12px 16px',
-    border: '1px solid var(--color-medium-grey)',
-    borderRadius: 'var(--radius-sm)',
-    fontSize: 'var(--text-sm)',
+    padding: '14px 16px',
+    border: '1px solid #E5E5E5',
+    borderRadius: '8px',
+    fontSize: '15px',
     outline: 'none',
-    transition: 'border-color 0.3s ease'
+    transition: 'border-color 0.2s ease',
+    backgroundColor: '#ffffff',
+    color: '#111'
 };
 
 export default LoginModal;

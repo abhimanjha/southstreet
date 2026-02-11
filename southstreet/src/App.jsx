@@ -24,6 +24,7 @@ import TermsOfService from './pages/TermsOfService'
 import CookiePolicy from './pages/CookiePolicy'
 import UserDashboard from './pages/UserDashboard'
 import OrderConfirmation from './pages/OrderConfirmation'
+import InvoicePreview from './pages/InvoicePreview'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
@@ -90,6 +91,7 @@ function App() {
               <Route path="cookies" element={<CookiePolicy />} />
               <Route path="account" element={<UserDashboard />} />
               <Route path="order-confirmation/:orderId" element={<OrderConfirmation />} />
+              <Route path="invoice-preview" element={<InvoicePreview />} />
             </Route>
           </Routes>
         </BrowserRouter>
