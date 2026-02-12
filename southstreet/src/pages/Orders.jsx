@@ -37,7 +37,7 @@ const Orders = () => {
             {/* Sidebar */}
             <div className="orders-sidebar" style={{ width: '250px', flexShrink: 0 }}>
                 <div style={{ marginBottom: '20px' }}>
-                    <h2 style={{ fontSize: '24px', fontWeight: '500', marginBottom: '20px' }}>Orders</h2>
+
                     <ul style={{ listStyle: 'none', padding: 0 }}>
                         <li style={{ marginBottom: '10px' }}>
                             <a href="/account/orders" style={{ textDecoration: 'none', color: '#111', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -65,7 +65,13 @@ const Orders = () => {
                 ) : (
                     <div>
                         {orders.map(order => (
-                            <div key={order.id} style={{ border: '1px solid #e5e5e5', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
+                            <div
+                                key={order.id}
+                                onClick={() => navigate(`/account/orders/${order.id}`)}
+                                style={{ border: '1px solid #e5e5e5', borderRadius: '8px', padding: '20px', marginBottom: '20px', cursor: 'pointer', transition: 'box-shadow 0.2s' }}
+                                onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)'}
+                                onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                            >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
                                     <div>
                                         <p style={{ color: '#757575', fontSize: '14px' }}>Order Placed</p>

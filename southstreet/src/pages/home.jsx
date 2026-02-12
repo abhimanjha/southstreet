@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import CategoryCard from "../components/CategoryCard";
+import Spotlight from "../components/Spotlight";
 
 
 function Home() {
@@ -191,6 +192,8 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <Spotlight />
 
     </>
 

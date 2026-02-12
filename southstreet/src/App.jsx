@@ -25,6 +25,7 @@ import CookiePolicy from './pages/CookiePolicy'
 import UserDashboard from './pages/UserDashboard'
 import OrderConfirmation from './pages/OrderConfirmation'
 import InvoicePreview from './pages/InvoicePreview'
+import OrderTracking from './pages/OrderTracking'
 import Orders from './pages/Orders'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminLayout from './components/admin/AdminLayout'
@@ -92,6 +93,7 @@ function App() {
               <Route path="cookies" element={<CookiePolicy />} />
               <Route path="account" element={<UserDashboard />} />
               <Route path="account/orders" element={<Orders />} />
+              <Route path="account/orders/:orderId" element={<OrderTracking />} />
               <Route path="order-confirmation/:orderId" element={<OrderConfirmation />} />
               <Route path="invoice-preview" element={<InvoicePreview />} />
             </Route>
