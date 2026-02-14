@@ -10,6 +10,18 @@ import Spotlight from "../components/Spotlight";
 function Home() {
   const { products, fetchProducts } = useContext(ShopContext);
   const parallaxRef = useRef(null);
+  const shopByStyleRef = useRef(null);
+
+  const scrollShopByStyle = (direction) => {
+    if (shopByStyleRef.current) {
+      const scrollAmount = 350; // Card width + gap
+      shopByStyleRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
 
   // Refresh products on mount
   useEffect(() => {
@@ -62,15 +74,7 @@ function Home() {
     { id: 4, name: 'Luxury', image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2670&auto=format&fit=crop' }, // High-end Fashion/Lifestyle
   ];
 
-  // Lookbook images
-  const lookbookImages = [
-    'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600',
-    'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600',
-    'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600',
-    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600',
-  ];
+
 
   return (
     <>
@@ -185,27 +189,55 @@ function Home() {
         </div>
       </section>
 
-      {/* Lookbook Gallery */}
-      <section className="section" id="lookbook">
-        <div className="section-header animate-on-scroll">
-          <h2 className="section-title">Lookbook</h2>
-          <p className="section-subtitle">
-            Style inspiration from our latest collection
-          </p>
+      {/* Shop By Style Section (Replaces Lookbook) */}
+      <section className="section" id="shop-by-style">
+        <div className="shop-by-style-header animate-on-scroll">
+          <h2 className="section-title" style={{ marginBottom: 0 }}>Shop By Style</h2>
+          <div className="slider-nav-container">
+            <button
+              onClick={() => scrollShopByStyle('left')}
+              className="slider-nav-btn"
+              aria-label="Previous"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button
+              onClick={() => scrollShopByStyle('right')}
+              className="slider-nav-btn"
+              aria-label="Next"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
         </div>
-        <div className="lookbook-gallery animate-on-scroll">
-          {lookbookImages.map((image, index) => (
-            <div key={index} className="lookbook-item">
-              <img src={image} alt={`Lookbook ${index + 1}`} className="lookbook-image" />
-              <div className="lookbook-overlay">
-                <svg className="lookbook-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+        <div className="product-slider animate-on-scroll" ref={shopByStyleRef}>
+
+          {[
+            { id: 1, name: 'Casual', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop' },
+            { id: 2, name: 'Formal', image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop' },
+            { id: 3, name: 'Party', image: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=800&auto=format&fit=crop' },
+            { id: 4, name: 'Activewear', image: 'https://images.unsplash.com/photo-1483726234545-481d6e880fc6?w=800&auto=format&fit=crop' },
+            { id: 5, name: 'Vacation', image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop' },
+          ].map((style) => (
+            <div className="shop-by-style-card" key={style.id}>
+              <div className="shop-by-style-image-wrapper">
+                <img
+                  src={style.image}
+                  alt={style.name}
+                  className="shop-by-style-image"
+                />
               </div>
+              <h3 className="shop-by-style-title">{style.name}</h3>
             </div>
           ))}
+
         </div>
       </section>
+
 
       <Spotlight />
 

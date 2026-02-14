@@ -25,8 +25,9 @@ const Product = () => {
             // Simple logic for related products: items with same category, excluding current
             const related = products.filter(
                 (item) => item.category?.id === foundProduct.category?.id && item.id !== foundProduct.id
-            ).slice(0, 4);
+            ).slice(0, 8);
             setRelatedProducts(related);
+
         }
     }, [productId, products]);
 
@@ -131,7 +132,7 @@ const Product = () => {
                     <h2 className="section-title">Explore More</h2>
                     <p className="section-subtitle">You might also like</p>
                 </div>
-                <div className="product-grid">
+                <div className="product-slider">
                     {relatedProducts.length > 0 ? (
                         relatedProducts.map((item) => {
                             const image = item.images && item.images.length > 0
@@ -149,9 +150,10 @@ const Product = () => {
                             );
                         })
                     ) : (
-                        <p style={{ textAlign: 'center' }}>No related products found.</p>
+                        <p style={{ textAlign: 'center', width: '100%' }}>No related products found.</p>
                     )}
                 </div>
+
             </div>
         </div>
     );
