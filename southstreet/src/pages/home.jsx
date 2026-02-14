@@ -56,10 +56,10 @@ function Home() {
 
   // Category data
   const categories = [
-    { id: 1, name: 'Men', image: 'https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=800' },
-    { id: 2, name: 'Women', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800' },
-    { id: 3, name: 'Streetwear', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800' },
-    { id: 4, name: 'Luxury', image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800' },
+    { id: 1, name: 'Men', image: 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80&w=2187&auto=format&fit=crop' }, // Classic Men's Fashion (Suits/Clean lines)
+    { id: 2, name: 'Women', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=2669&auto=format&fit=crop' }, // Elegant Women's Fashion
+    { id: 3, name: 'Streetwear', image: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=2574&auto=format&fit=crop' }, // Premium Streetwear
+    { id: 4, name: 'Luxury', image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2670&auto=format&fit=crop' }, // High-end Fashion/Lifestyle
   ];
 
   // Lookbook images
@@ -105,22 +105,36 @@ function Home() {
       </section>
 
 
-      {/* Categories Section */}
-      <section className="section" id="categories" style={{ backgroundColor: 'var(--color-light-grey)' }}>
+      {/* Categories Section - Continuous Scroll Carousel */}
+      <section className="section" id="categories" style={{ backgroundColor: 'var(--color-light-grey)', overflow: 'hidden' }}>
         <div className="section-header animate-on-scroll">
           <h2 className="section-title">Shop by Category</h2>
           <p className="section-subtitle">
             Explore our carefully curated collections
           </p>
         </div>
-        <div className="category-grid animate-on-scroll">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              image={category.image}
-              name={category.name}
-            />
-          ))}
+
+        <div className="category-carousel-container">
+          <div className="category-carousel-track">
+            {/* Original Set */}
+            {categories.map((category) => (
+              <div className="category-carousel-item" key={`orig-${category.id}`}>
+                <CategoryCard
+                  image={category.image}
+                  name={category.name}
+                />
+              </div>
+            ))}
+            {/* Duplicated Set for Loop */}
+            {categories.map((category) => (
+              <div className="category-carousel-item" key={`dup-${category.id}`}>
+                <CategoryCard
+                  image={category.image}
+                  name={category.name}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -90,11 +90,29 @@ const getOrder = async (req, res, next) => {
             });
         }
 
+
+        // Debug logs for authorization issue
+        console.log('GetOrder Debug:', {
+            reqUserId: req.user.id,
+            reqUserRole: req.user.role,
+            orderId: order.id,
+            orderUserId: order.userId,
+            match: order.userId === req.user.id
+        });
+
         // Check if user owns this order (unless admin)
-        if (req.user.role !== 'admin' && order.userId !== req.user.id) {
+        const orderUserId = String(order.userId || '').trim();
+        const requestUserId = String(req.user.id || '').trim();
+
+        if (req.user.role !== 'admin' && orderUserId !== requestUserId) {
+            console.log('Authorization Failed: User ID mismatch');
             return res.status(403).json({
                 success: false,
-                message: 'Not authorized to view this order'
+                message: 'Not authorized to view this order',
+                debug: {
+                    reqUserId: requestUserId,
+                    orderUserId: orderUserId
+                }
             });
         }
 

@@ -11,6 +11,7 @@ const OrderConfirmation = () => {
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [orderError, setOrderError] = useState(null);
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -21,8 +22,12 @@ const OrderConfirmation = () => {
                 }
             } catch (error) {
                 console.error('Error fetching order:', error);
-                // If order not found, redirect to home
-                setTimeout(() => navigate('/'), 3000);
+
+                // Extract error details if available
+                const msg = error.response?.data?.message || error.message || 'Unknown error';
+                const debugInfo = error.response?.data?.debug || null;
+
+                setOrderError({ message: msg, debug: debugInfo });
             } finally {
                 setLoading(false);
             }
@@ -58,8 +63,59 @@ const OrderConfirmation = () => {
                 paddingTop: '120px',
                 textAlign: 'center'
             }}>
-                <h2>Order not found</h2>
-                <p>Redirecting to home...</p>
+                <h2>Order Processing or Not Found</h2>
+                <p style={{ margin: '10px 0 20px', color: '#666' }}>
+                    We couldn't retrieve your order details immediately. <br />
+                    It might still be processing. Please check your order history.
+                </p>
+
+                {orderError && (
+                    <div style={{
+                        margin: '10px 0 20px',
+                        padding: '10px',
+                        background: '#f9f9f9',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        fontSize: '0.8rem',
+                        color: 'red',
+                        maxWidth: '600px'
+                    }}>
+                        <strong>Error:</strong> {orderError.message}
+                        {orderError.debug && (
+                            <pre style={{ textAlign: 'left', marginTop: '5px' }}>
+                                {JSON.stringify(orderError.debug, null, 2)}
+                            </pre>
+                        )}
+                    </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '15px' }}>
+                    <Link to="/account/orders">
+                        <button style={{
+                            padding: '12px 24px',
+                            backgroundColor: '#111',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                        }}>
+                            View My Orders
+                        </button>
+                    </Link>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            padding: '12px 24px',
+                            backgroundColor: 'white',
+                            color: '#111',
+                            border: '1px solid #111',
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Retry
+                    </button>
+                </div>
             </div>
         );
     }
@@ -266,7 +322,7 @@ const OrderConfirmation = () => {
                             Continue Shopping
                         </button>
                     </Link>
-                    <Link to="/account">
+                    <Link to="/account/orders">
                         <button style={{
                             padding: '14px 32px',
                             backgroundColor: 'white',

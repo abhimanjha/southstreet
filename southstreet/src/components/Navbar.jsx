@@ -42,7 +42,7 @@ export default function Navbar() {
 
     const handleUserIconClick = () => {
         if (isAuthenticated()) {
-            navigate('/account');
+            navigate('/account/orders');
         } else {
             setIsLoginModalOpen(true);
         }

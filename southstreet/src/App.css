@@ -1526,3 +1526,62 @@
   background-color: #fee2e2;
   color: #b91c1c;
 }
+
+/* ==========================================
+   CATEGORY CAROUSEL - Continuous Scroll
+   ========================================== */
+
+.category-carousel-container {
+  width: 100%;
+  overflow: hidden;
+  padding: var(--space-xl) 0;
+  background-color: var(--color-light-grey);
+}
+
+.category-carousel-track {
+  display: flex;
+  gap: var(--space-lg);
+  width: max-content;
+  padding-right: var(--space-lg);
+  /* Ensure total width includes the final gap for perfect 50% split */
+  animation: scroll 40s linear infinite;
+}
+
+.category-carousel-track:hover {
+  animation-play-state: paused;
+}
+
+.category-carousel-item {
+  width: 400px;
+  flex-shrink: 0;
+}
+
+/* Override existing category card height to match new width */
+.category-carousel-item .category-card {
+  height: 500px;
+  width: 100%;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    /* If duplicates are exactly 1/2 of width, move -50% */
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive adjustments for Carousel */
+@media (max-width: 768px) {
+  .category-carousel-item {
+    width: 280px;
+    /* Reduced specific width for mobile */
+  }
+
+  .category-carousel-item .category-card {
+    height: 380px;
+    /* Reduced height for mobile */
+  }
+}

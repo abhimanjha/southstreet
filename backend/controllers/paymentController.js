@@ -14,6 +14,7 @@ const createRazorpayOrder = async (req, res, next) => {
     try {
         const { amount, currency = 'INR' } = req.body;
 
+        ``
         const options = {
             amount: Math.round(amount * 100), // Amount in paise
             currency: currency,

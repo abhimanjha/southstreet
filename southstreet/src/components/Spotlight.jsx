@@ -15,8 +15,11 @@ const Spotlight = () => {
         { id: 13, name: 'Oversized', image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=400&auto=format&fit=crop&q=60' },
     ];
 
+    // Duplicate items to create seamless loop
+    const carouselItems = [...spotlightItems, ...spotlightItems, ...spotlightItems];
+
     return (
-        <section className="spotlight-section" style={{ padding: '60px 20px', textAlign: 'center', backgroundColor: '#fff' }}>
+        <section className="spotlight-section" style={{ padding: '60px 0', textAlign: 'center', backgroundColor: '#fff', overflow: 'hidden' }}>
             <h2 style={{
                 fontFamily: 'impact, sans-serif',
                 fontSize: '48px',
@@ -24,68 +27,115 @@ const Spotlight = () => {
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
                 marginBottom: '40px',
-                color: '#111'
+                color: '#111',
+                padding: '0 20px'
             }}>
                 SPOTLIGHT
             </h2>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '20px',
-                maxWidth: '1200px',
-                margin: '0 auto'
-            }}>
-                {spotlightItems.map((item) => (
-                    <div
-                        key={item.id}
-                        style={{ cursor: 'pointer', textAlign: 'center' }}
-                        onClick={() => navigate('/shop')}
-                    >
-                        <div style={{
-                            width: '100%',
-                            aspectRatio: '1/1',
-                            overflow: 'hidden',
-                            marginBottom: '10px'
-                        }}>
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                }}
-                            />
+            <div className="infinite-scroll-container">
+                <div className="infinite-scroll-track">
+                    {carouselItems.map((item, index) => (
+                        <div
+                            key={`${item.id}-${index}`}
+                            className="spotlight-item"
+                            onClick={() => navigate('/shop')}
+                        >
+                            <div className="image-container">
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                />
+                            </div>
+                            <h3>{item.name}</h3>
                         </div>
-                        <h3 style={{
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            color: '#111',
-                            margin: 0,
-                            textTransform: 'uppercase'
-                        }}>
-                            {item.name}
-                        </h3>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <style jsx>{`
-                @media (max-width: 1024px) {
-                    .spotlight-section div[style*="gridTemplateColumns"] {
-                        grid-template-columns: repeat(3, 1fr) !important;
+                .infinite-scroll-container {
+                    width: 100%;
+                    overflow: hidden;
+                    position: relative;
+                }
+
+                .infinite-scroll-track {
+                    display: flex;
+                    gap: 20px;
+                    width: max-content;
+                    animation: scroll 30s linear infinite;
+                }
+
+                .spotlight-item {
+                    width: 280px;
+                    flex-shrink: 0;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: transform 0.3s ease;
+                }
+
+                .spotlight-item:hover {
+                    transform: translateY(-5px);
+                }
+
+                .image-container {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    overflow: hidden;
+                    margin-bottom: 10px;
+                    background-color: #f5f5f5;
+                }
+
+                .image-container img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.5s ease;
+                }
+
+                .spotlight-item:hover .image-container img {
+                    transform: scale(1.05);
+                }
+
+                h3 {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #111;
+                    margin: 0;
+                    text-transform: uppercase;
+                }
+
+                @keyframes scroll {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(calc(-33.333% - 6.66px)); 
+                        /* 
+                           We have 3 sets of items. We want to scroll by 1/3 of the total width.
+                           However, 'gap' complicates exact percentage.
+                           A simpler approach for perfect loop logic usually involves duplicating content enough times 
+                           and moving by -50% if duplicated once, or -33.33% if duplicated twice (total 3 sets).
+                           Let's rely on standard calc(-100% / 3) approximately, or refine if needed.
+                           
+                           Actually, standard way:
+                           Move by -(width of one set + gap * items count).
+                           
+                           Improvement: Let's use two identical sets and translate -50%.
+                        */
+                        transform: translateX(-33.33%);
                     }
                 }
-                @media (max-width: 768px) {
-                    .spotlight-section div[style*="gridTemplateColumns"] {
-                        grid-template-columns: repeat(2, 1fr) !important;
-                    }
-                }
+
+                /* Mobile Adjustments */
                 @media (max-width: 600px) {
                     .spotlight-section h2 {
                         font-size: 36px !important;
                         margin-bottom: 30px !important;
+                    }
+                    .spotlight-item {
+                        width: 220px;
                     }
                 }
             `}</style>
